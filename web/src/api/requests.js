@@ -12,3 +12,25 @@ export function findDrugs(data){
         }).catch(err => reject(err));
     });
 }
+export function getRelatedDrugs(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://librairy.linkeddata.es/bio-nlp/drugs?atc=${data}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))
+
+    })
+} 
+export function getRelatedDiseases(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://librairy.linkeddata.es/bio-nlp/diseases?atc=${data}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))
+    })
+}
+export function getRelatedArticles(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://librairy.linkeddata.es/bio-nlp/articles?atc=${data}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))
+    })
+}

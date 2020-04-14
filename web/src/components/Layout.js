@@ -3,12 +3,12 @@ import Header from './Header'
 import {Row, Col} from 'antd'
 export default function Layout(props){
     return(
-        <Row>
+        <Row justify="center">
             <Col
-            sm={{ span: 24 }}
-            md={{ span: 20, offset: 2 }}
-            lg={{ span: 16, offset: 4 }}
-            xl={{ span: 12, offset: 6 }}            
+            xs={{ span: 22 }}
+            md={{ span: 18}}
+            lg={{ span: 16}}
+            xl={{ span: 12}}            
             >
                 <Header></Header>
                 {props.children}

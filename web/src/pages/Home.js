@@ -11,13 +11,12 @@ export default class Home extends React.Component{
     }
     setDrugs(drugs){
         this.setState({drugs:drugs})
-        console.log(drugs)
     }
     render(){
         return(
             <Layout>
                 <SearchBar parentCallback={(drugs) => this.setDrugs(drugs)}></SearchBar>
-                <DrugTabs data={this.state.drugs}></DrugTabs>
+                <DrugTabs drugs={this.state.drugs}></DrugTabs>
             </Layout>
         )
     }
