@@ -34,7 +34,7 @@ export default function DrugTabs({drugs}){
                             <Tag color="blue">ATC: {drug.atc_code}</Tag>
                             </Col>
                             <Col>
-                                <Tag color="purple">Parent ATC: {drug.atc_parent}</Tag>
+                                <Tag color="geekblue">Parent ATC: {drug.atc_parent}</Tag>
                             </Col>
                             <Col>
                                  <Tag color="green">CUI: {drug.cui}</Tag>
@@ -47,7 +47,7 @@ export default function DrugTabs({drugs}){
                             {capitalize(drug.name)}
                         </Title>
                         <Divider></Divider>
-                        <div>
+                        <div style={{  overflow:'auto'}}>
                         {Object.keys(drug.relatedDrugs).length !== 0 ? (
                             <>
                             <Title level={3}>Related Drugs:</Title>
@@ -75,19 +75,19 @@ export default function DrugTabs({drugs}){
                         ):''}                           
                         </div>
                         <Divider></Divider>
-                        <div>
+                        <div style={{  overflow:'auto'}}>
                             <Title level={3}>This drug appear in:</Title>
                             <Space direction="vertical">
                                 {drug.relatedArticles.map((article) => (
-                                    <a target="_blank"href={article.link}>{article.name}</a>
+                                    <a target="_blank"href={article.url}>{article.name}</a>
                                 ))}
                             </Space>
                         </div>
                         <Divider></Divider>
-                        <div>
+                        <div style={{  overflow:'auto'}}>
                             <Title level={3}>Related Diseases:</Title>
                             <Space direction="vertical" size="small">
-                                <Row gutter={[16,16]}>
+                                <Row gutter={[8,8]} justify="left" align="middle">
                                 { Object.keys(drug.relatedDiseases).map((disease) => {
                                     return(
                                     <Col>

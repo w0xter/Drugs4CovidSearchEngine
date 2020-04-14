@@ -1,12 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Input, message} from 'antd'
 import {findDrugs, getRelatedDrugs, getRelatedDiseases, getRelatedArticles} from '../api/requests'
 const { Search } = Input;
 export default function SearchBar(props){
+    const [find, setFind] = useState(false)
     const sendData = (value) => {
-        searh(value).then((data) => {
-            props.parentCallback(data)
-        }).catch(err => message.error("Oops, somenthing goes wrong please try it again..."));
+        let key = 'updatable'
+        message.loading({ content: 'Loading...', key });
+        if(value.length !== 0){
+            searh(value).then((data) => {
+                props.parentCallback(data)
+                message.success({ content: 'Loaded!', key, duration: 2 });
+            }).catch(err => message.error("Oops, somenthing goes wrong please try it again..."))
+        }else{
+            message.error({content:"The search field is empty!", key, duration:2})
+        }
     }
     const searh = (data) => {
         return new Promise((resolve, reject) => {
@@ -50,11 +58,14 @@ export default function SearchBar(props){
         })
     }
     return(    
+        <div style={{marginBottom:16}}>
         <Search
             placeholder="input search text"
             enterButton="Search"
             size="large"
             onSearch={value => sendData(value)}
         />
+        </div>
+
       )
 }

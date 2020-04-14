@@ -6,6 +6,7 @@ export default function Layout(props){
         <Row justify="center">
             <Col
             xs={{ span: 22 }}
+            sm={20}
             md={{ span: 18}}
             lg={{ span: 16}}
             xl={{ span: 12}}            
