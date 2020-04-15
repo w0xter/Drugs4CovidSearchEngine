@@ -160,7 +160,7 @@ export default function MedicineCarousel({medicines}){
                                 {medicine.fotos.length !== 0 ? (
                                     <>
                                     <Title level={4}>Imagenes Asociadas</Title>
-                                    <Row gutter={[16,16]}>
+                                    <Row align="bottom" gutter={[16,16]}>
                                     {medicine.fotos.map((img) => (
                                         <Col xs={24} md={8} justify="center">
                                             <Row justify="center">
