@@ -23,7 +23,13 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.slick-dots > li > button {
+  background:blue!important;
 
+}
+.medicineImg{
+  max-width: 200px!important;
+}
 .App-link {
   color: #61dafb;
 }

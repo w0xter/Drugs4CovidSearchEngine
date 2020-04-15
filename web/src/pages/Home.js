@@ -23,7 +23,7 @@ export default class Home extends React.Component{
                 <SearchBar parentCallback={(drugs) => this.setDrugs(drugs)}></SearchBar>
                 {this.state.drugs.length !== 0 ? (<DrugTabs drugs={this.state.drugs}></DrugTabs>):(
                     <div>
-                    <Row>
+                    <Row align="top">
                         <Col xs={24} md={12}>
                             <Title level={2}>
                             BIO-NLP
@@ -31,12 +31,13 @@ export default class Home extends React.Component{
                             <Paragraph>
                             An open web service to identify drugs mentioned in a text and classify them according to the Anatomical Therapeutic Chemical (ATC) classification system and the Concept Unique Identifiers (CUI) described in the Unified Medical Language System (UMLS)
                             </Paragraph>
-                        </Col>                        
+                        </Col>
+                        <Col xs={24} md={12}>
+                            <img className="responsiveImg" src={MedicalResearch}/>
+                        </Col>                         
                     </Row>
                     <Row>
-                        <Col xs={24}>
-                            <img className="responsiveImg" src={MedicalResearch}/>
-                        </Col>                        
+                       
                     </Row>
                     </div>
                 )}

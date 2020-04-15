@@ -9,7 +9,7 @@ export default function Layout(props){
             sm={20}
             md={{ span: 18}}
             lg={{ span: 16}}
-            xl={{ span: 12}}            
+            xl={{ span: 16}}            
             >
                 <Header></Header>
                 {props.children}

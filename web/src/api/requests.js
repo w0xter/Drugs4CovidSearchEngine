@@ -34,3 +34,10 @@ export function getRelatedArticles(data){
         }).catch((err) => reject(err))
     })
 }
+export function getMedicinesInfo(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://cima.aemps.es/cima/rest/medicamentos?{${data}}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))
+    });
+}

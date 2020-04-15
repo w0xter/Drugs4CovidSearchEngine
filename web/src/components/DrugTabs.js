@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Tabs,Typography, Tag, Row, Col, Space, Divider} from 'antd'
-
+import MedicineCarousel from './MedicineCarousel'
 const { TabPane } = Tabs;
 const {Title} = Typography
 const {Paragraph} = Typography
@@ -21,7 +21,8 @@ export default function DrugTabs({drugs}){
     const capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
-      }    
+      }
+    console.log(drugs)    
     return(
         <>
         {drugs.length !== 0 ?(
@@ -47,13 +48,16 @@ export default function DrugTabs({drugs}){
                             {capitalize(drug.name)}
                         </Title>
                         <Divider></Divider>
+                        <div>
+                            <MedicineCarousel medicines={drug.medicinesInfo}></MedicineCarousel>
+                        </div>
+                        <Divider></Divider>
                         <div style={{  overflow:'auto'}}>
                         {Object.keys(drug.relatedDrugs).length !== 0 ? (
                             <>
                             <Title level={3}>Related Drugs:</Title>
                             <Space direction="vertical" size="small">
                             { Object.keys(drug.relatedDrugs).map((key) =>{
-                                console.log(Object.keys(drug.relatedDrugs))
                                 return(
                                 <Row gutter={[16,16]}>
                                     <Col>
