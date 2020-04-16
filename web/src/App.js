@@ -11,7 +11,7 @@ function App() {
         <Route exact path="/">
           <Home/>
         </Route>
-        <Route path="/search/:drugsNames" component={SearchPage}/>
+        <Route path="/search/:searchType/:drugsNames" component={SearchPage}/>
       </Switch>
     </Router>
   );

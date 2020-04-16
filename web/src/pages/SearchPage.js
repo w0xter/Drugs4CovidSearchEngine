@@ -6,11 +6,15 @@ import SearchBar from '../components/Searchbar'
 import DrugTabs from '../components/DrugTabs'
 import Layout from '../components/Layout'
 import abduction from '../assets/abduction.svg'
+import ActivePrincipieInfo from '../components/ActivePrincipieInfo'
+import SpanisTradeNameInfo from '../components/SpanisTradeNameInfo'
+import AtcInfo from '../components/AtcInfo'
 
 const {Title} = Typography
 export default function SearchPage(props){
     const antIcon = <LoadingOutlined style={{ fontSize: 72 }} spin />;
     const value = props.match.params.drugsNames
+    const searchType = props.match.params.searchType
     const [result, setResult] = useState([])
     const [searching, setSearching] = useState(true)
     const [error, setError] = useState(false)
@@ -86,7 +90,20 @@ export default function SearchPage(props){
             }).catch((err) => reject(err))
         })
     }    
+    const dataDisplays = () =>{
+        switch(searchType){
+            case 'generic':
+                return <DrugTabs drugs={result}/>
+            case 'atc':
+                return <AtcInfo data={result}/>
+            case 'activeprincipie':
+                return <ActivePrincipieInfo data={result}/>
+            case 'spanish':
+                return <SpanisTradeNameInfo data={result}/>
 
+
+        }
+    }
     useEffect(() => {
         sendData(value)
     },[value])
@@ -110,7 +127,7 @@ export default function SearchPage(props){
                         <Space direction="vertical" size="large">
                         <Title level={3}>Wow, some alien abducted the {value} from our drug repository</Title>
                         <img src={abduction} className="responsiveImg" alt=""/>
-                        <Title type="secondary" level={4}>Just kidding, we didn't find anything related with this drug</Title>
+                        <Title type="secondary" level={4}>Just kidding, we haven't found anything related with this drug</Title>
                         </Space>
                     </Col>
                     </Row>
