@@ -97,6 +97,8 @@ export default function MedicineCarousel({medicines}){
                     let rev = Object.keys(medicine.estado).includes('rev')? Date(medicine.estado.rev):0
                     let estado = aut !== 0 && (susp === 0 || aut > susp) && (rev === 0 || aut > rev )
                     let viasAdministracion = ''
+                    let ppa = medicine.vtm.nombre.split(" + ")
+                    let medicineDosis = medicine.dosis.split("/").length >= ppa.length ? medicine.dosis.split("/"):medicine.dosis.split("-")
                     let tabName = medicine.nombre.substring(0,25)
                     tabName = medicine.nombre.length > 25 ? tabName + '...':tabName
                     medicine.viasAdministracion.map((via) => viasAdministracion += via.nombre + ', ')
@@ -136,10 +138,10 @@ export default function MedicineCarousel({medicines}){
                                 <List.Item><Text strong>Forma Farmacéutica: </Text> {capitalize(medicine.formaFarmaceutica.nombre)}</List.Item>
                                 <List.Item ><Text strong>Via de Administración: </Text>{capitalize(viasAdministracion)}</List.Item>
                                 <List.Item><Text strong>Principio Activo: </Text> {medicine.vtm.nombre}</List.Item>
-                                <List.Item><Text strong>Dosis</Text></List.Item>
-                                {medicine.dosis.split("/").map((dosis, idx) =>(
+                                <List.Item><Text strong>Dosis:</Text></List.Item>
+                                {medicineDosis.map((dosis, idx) =>(
                                     <>
-                                {medicine.vtm.nombre.split(' + ').length > idx ? (<List.Item><Text strong>{capitalize(medicine.vtm.nombre.split(' + ')[idx]) + ': '}</Text>{ dosis}</List.Item>):''}
+                                {ppa.length > idx ? (<List.Item><Text strong>{capitalize(ppa[idx]) + ': '}</Text>{ dosis}</List.Item>):''}
                                 </>
                                 ))
                                 }

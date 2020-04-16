@@ -20,6 +20,7 @@ name: "paracetamol"
 export default function DrugTabs({drugs}){
     const capitalize = (s) => {
         if (typeof s !== 'string') return ''
+        s = s.toLocaleLowerCase()
         return s.charAt(0).toUpperCase() + s.slice(1)
       }
     console.log(drugs)    
@@ -29,7 +30,7 @@ export default function DrugTabs({drugs}){
         <Tabs>
             {drugs.map((drug) => {
                 return(
-                    <TabPane tab={capitalize(drug.name)} key={drug.name}>
+                    <TabPane tab={capitalize(drug.name)} key={drug.atc_code}>
                         <Row gutter={[16,16]}>
                             <Col>
                             <Tag color="blue">ATC: {drug.atc_code}</Tag>
@@ -48,10 +49,13 @@ export default function DrugTabs({drugs}){
                             {capitalize(drug.name)}
                         </Title>
                         <Divider></Divider>
+                        { drug.medicinesInfo.length !== 0 ?(
                         <div>
                             <MedicineCarousel medicines={drug.medicinesInfo}></MedicineCarousel>
+                            <Divider></Divider>
                         </div>
-                        <Divider></Divider>
+                        ):''
+                        }
                         <div style={{  overflow:'auto'}}>
                         {Object.keys(drug.relatedDrugs).length !== 0 ? (
                             <>

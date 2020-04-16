@@ -48,7 +48,7 @@ export default class SearchBar extends Component{
                     promiseChainRelatedArticles.push(getRelatedArticles(drug.atc_code))
                     promiseChainRelatedDrugs.push(getRelatedDrugs(drug.atc_code))
                     promiseChainRelatedDiseases.push(getRelatedDiseases(drug.atc_code))
-                    promiseChainMedicineInfo.push(getMedicinesInfo('atc:' + drug.atc_code))
+                    promiseChainMedicineInfo.push(getMedicinesInfo(drug.atc_code))
                 })
                 Promise.all(promiseChainRelatedDrugs).then((data) =>{
                     data.map((drugs, idx) => {
