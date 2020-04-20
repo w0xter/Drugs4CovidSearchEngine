@@ -112,10 +112,7 @@ export default function MedicineCarousel({medicines}){
                                     </Col>
                                 ):''}
                                 <Col>
-                                    <Tag color="blue">{medicine.cpresc}</Tag>                                
-                                </Col>
-                                <Col>
-                                    <Tag color="warning">{medicine.receta ? 'Con Receta':'Sin Receta'}</Tag>                                
+                                    <Tag color={medicine.receta ?'warning':'blue'}>{medicine.cpresc}</Tag>                                
                                 </Col>
                                 {medicine.triangulo ? (<Col>
                                     <Tag color="warning">Triángulo Negro <CaretDownOutlined style={{color:'#000'}} /></Tag>
@@ -127,11 +124,6 @@ export default function MedicineCarousel({medicines}){
                                     <Tag color="error">Suspendido</Tag>
                                 )}
                                 </Col>
-                                { medicine.comerc?(
-                                    <Col>
-                                        <Tag color="success">Comercial</Tag>
-                                    </Col>):''
-                                }
                             </Row>
                             <div>
                             <List header={<Title level={3}>Información General</Title>}>

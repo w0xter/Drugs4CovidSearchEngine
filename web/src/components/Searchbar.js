@@ -1,11 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Input,Row, Col,Space, Radio, Typography} from 'antd'
 const {Text} = Typography
 const { Search } = Input;
 export default function SearchBar(props){
     const [type, setType] = useState('activeingredient')
-    const searchTypes = ['generic', 'atc', 'activeingredient', 'spanish']
-    const urlVal = document.location.href.split("/")[document.location.href.split("/").length-2]
+    const searchTypes = ['atc', 'activeingredient', 'spanish']
+    const url = document.location.href.split("/")
+    const urlVal = url[url.length - 2]
     const defaultValue = (searchTypes.includes(urlVal))? urlVal:'activeingredient'
     const goTo = (value) => {
         document.location.href=`/search/${type}/${value}`
@@ -13,6 +14,9 @@ export default function SearchBar(props){
     const onChange = (e) => {
         setType(e.target.value)
     }
+    useEffect(() => {
+        setType(defaultValue)
+    },[])
         return(    
             <div style={{marginBottom:16}}>
                     <Search
@@ -29,7 +33,7 @@ export default function SearchBar(props){
                         <Radio.Group onChange={onChange} defaultValue={defaultValue} size="small">
                             <Radio.Button value="activeingredient">Active ingredient</Radio.Button>
                             <Radio.Button value="atc">ATC code</Radio.Button>
-                            <Radio.Button disabled value="spanish">Spanish Trade name 🇪🇸</Radio.Button>
+                            <Radio.Button value="spanish">Spanish Trade name 🇪🇸</Radio.Button>
                         </Radio.Group>
                         </Col>
                     </Row>

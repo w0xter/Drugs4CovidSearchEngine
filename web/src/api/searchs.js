@@ -43,18 +43,25 @@ export function searchByAtc(atc){
 export function getSpanishMedicineATC(name){
     return new Promise((resolve, reject) => {
         let results = []
+        let medicines = []
+        let nregistro = []
     findSpanishTradeNameMedicine(name)
-        .then((data) => {
-            data.resultados.map(medicine => {
-                getSpanishTradeNameMedicineInfo(medicine.nregistro).then((data) => {
-                    data.atcs.map((atc) => {
-                        if(!results.includes(atc.codigo))
-                            results.push(atc.codigo)
-                    })
-                }).catch((err) => console.log(err))
-            });
-            return results
-        }).then(data => {resolve(results)})
+    .then((data) => {
+        data.resultados.map(medicine => {
+            medicines.push(getSpanishTradeNameMedicineInfo(medicine.nregistro))
+        })
+        return Promise.all(medicines)
+        }).then((data) => {
+            console.log(data)
+            data.map((medicine) => {
+                medicine.atcs.map((atc) => {
+                    if( atc.nivel === 5 && !results.includes(atc.codigo)){
+                        results.push(atc.codigo)
+                    }
+                })
+            })
+        return Promise.resolve(results)
+        }).then((data) => resolve(data))
         .catch(err => reject(err))
     });
 }
