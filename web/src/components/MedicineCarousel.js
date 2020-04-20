@@ -141,7 +141,7 @@ export default function MedicineCarousel({medicines}){
                             </div>
                             {medicine.materialesInf === true ?(
                                 <>
-                                {medicine.docs.length !== 0 ? (
+                                {Object.keys(medicine).includes('docs') && medicine.docs.length !== 0 ? (
                                 <>
                                     <Title level={4}>Documentos Asociados</Title>
                                     <Space size="small" direction="vertical">
@@ -151,7 +151,7 @@ export default function MedicineCarousel({medicines}){
                                     </Space>
                                 </>
                                 ):''}
-                                {medicine.fotos.length !== 0 ? (
+                                {Object.keys(medicine).includes('fotos') && medicine.fotos.length !== 0 ? (
                                     <>
                                     <Title level={4}>Imagenes Asociadas</Title>
                                     <Row align="bottom" gutter={[16,16]}>
