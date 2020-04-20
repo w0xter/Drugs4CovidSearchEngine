@@ -7,7 +7,7 @@ export function findDrugs(data){
                 'Content-Type': 'application/json'
             }
         }
-        axios.post(`${API}/drugs`, data, options).then((response) => {
+        axios.post(`${API}/drugs`, {text:data}, options).then((response) => {
             resolve(response.data)
         }).catch(err => reject(err));
     });
@@ -40,4 +40,17 @@ export function getMedicinesInfo(data){
             resolve(response.data)
         }).catch((err) => reject(err))
     });
+}
+export function findSpanishTradeNameMedicine(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://cima.aemps.es/cima/rest/medicamentos?nombre=${data}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))
+    });
+}
+export function getSpanishTradeNameMedicineInfo(data){
+    return new Promise((resolve, reject) => {
+        axios.get(`https://cima.aemps.es/cima/rest/medicamento?nregistro=${data}`).then((response) => {
+            resolve(response.data)
+        }).catch((err) => reject(err))    })
 }
