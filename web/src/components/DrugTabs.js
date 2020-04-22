@@ -27,7 +27,7 @@ export default function DrugTabs({drugs}){
         <Tabs>
             {drugs.map((drug) => {
                 return(
-                    <TabPane tab={capitalize(drug.name)} key={drug.name}>
+                    <TabPane tab={drug.id} key={drug.id}>
                         <AtcInfo data={drug}/>
                     </TabPane>
                 )

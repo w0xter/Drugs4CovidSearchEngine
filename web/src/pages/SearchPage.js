@@ -21,9 +21,9 @@ export default function SearchPage(props){
             Promise.resolve(searchType)
             .then((type) => {
                 if(type === 'activeingredient'){
-                    return searchByActiveIngredient(value)
+                    console.log("NOT YET")
                 }else if (type === 'spanish'){
-                    return searchBySpanishTradeName(value)
+                    console.log("NOT YET")
                 }else if (type === 'atc'){
                     return searchByAtc(value)
                 }else{
@@ -56,7 +56,7 @@ export default function SearchPage(props){
 
     useEffect(() => {
         sendData(value)
-    },[value])
+    },[])
         return(
             <Layout>
             <SearchBar></SearchBar>

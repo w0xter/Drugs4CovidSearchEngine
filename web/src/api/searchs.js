@@ -1,43 +1,44 @@
-import {getSpanishTradeNameMedicineInfo,findSpanishTradeNameMedicine,findDrugs, getMedicinesInfo, getRelatedArticles, getRelatedDiseases, getRelatedDrugs} from './requests'
+import {getSpanishTradeNameMedicineInfo,findSpanishTradeNameMedicine,getMedicinesInfo, getInfoByAtc, getParagraphIdByActiveIngredient, getParagraphInfo, getParagraphIdByAtcCode, getArticleInfo} from './requests'
 
-export function getATCInfo(atc){
-    console.log(atc)
-    return new Promise((resolve, reject) => {
-    let result  = {name:atc,articles:[], tradeMedicines:[], diseases:[], activeIngredients:[]};
-    getRelatedArticles(atc).then((data) => {
-        result.articles = data
-        return getRelatedDiseases(atc)
-    }).then((data) => {
-        result.diseases = data
-        return getRelatedDrugs(atc)
-    }).then((data) => {
-        result.activeIngredients = data;
-        return getMedicinesInfo(atc)
-    }).then((data) => {
-        result.tradeMedicines = data.resultados;
-        return Promise.resolve(result)
-    }).then((data) => {
-        resolve(data)
-    }).catch((err) => {console.log("Falla GET ATC");reject(err)})
+
+export function getAtcInfo(atc){
+    return new Promise(async (resolve, reject) => {
+        try{
+        const data = await getInfoByAtc(atc)
+        let result = await {tradeMedicines:[], relatedArticles:[], ...data}
+        result.tradeMedicines = await  getMedicinesInfo(result.id)
+        const actvIngrParagraphs = await getParagraphIdByActiveIngredient(result.label_t)
+        const AtcParagraphs = await getParagraphIdByAtcCode(result.id)
+        const allArticles= [...AtcParagraphs, ...actvIngrParagraphs]
+        result.relatedArticles =  await getRelatedArticles(allArticles)
+        resolve(result)
+    }catch(err){
+        reject(err)
+        console.error(err)
+    }
+    })    
+}
+const getRelatedArticles = async (list) => {
+    return new Promise(async (resolve) => {
+        let result = []
+        let uniques = []
+        await list.map(async(item) => {
+        if(!uniques.includes(item.id)){
+            uniques.push(item.id)
+            const paragraphInfo = await getParagraphInfo(item.id).catch((err) => console.log(err))
+            const articleInfo = await getArticleInfo(paragraphInfo.article_id_s).catch(err => console.log(err))
+            result.push({paragraph:paragraphInfo, article:articleInfo !== undefined ? articleInfo:null}) 
+        }
+         resolve(result)
+    })
 })
 }
 export function searchByAtc(atc){
     return new Promise((resolve, reject) => {
-        getATCInfo(atc)
-        .then(data => {
-            if(data.articles.length === 0 &&
-                data.tradeMedicines.length === 0 &&
-                Object.keys(data.diseases).length === 0 &&
-                Object.keys(data.activeIngredients).length === 0
-            ){
-                resolve([])
-            }else{
-                resolve([data])
-
-            }
-
-        })
-        .catch(err => reject(err))
+        let result = {}
+        getAtcInfo(atc).then((data) => {
+            resolve([data])
+        }).catch(err => reject(err))
     })
 }
 export function getSpanishMedicineATC(name){
@@ -65,33 +66,33 @@ export function getSpanishMedicineATC(name){
         .catch(err => reject(err))
     });
 }
-export function searchByActiveIngredient(text){
-    return new Promise((resolve, reject) => {
-        let results = []
-        findDrugs(text).then((data) => {
-            data.map((drug, idx) =>{
-                results.push(getATCInfo(drug.atc_code))
-            });
-            return Promise.all(results)
-        }).then(data => resolve(data))
-        .catch(err => {
-            console.log('Falla FindDrugs!')
-            reject(err)
-        })
-    });
-}
-export function searchBySpanishTradeName(text){
-    return new Promise((resolve, reject) => {
-        let results = []
-        getSpanishMedicineATC(text)
-        .then((data) => {
-            console.log(data)
-            data.map((atc) => {
-                console.log("HOLA")
-                results.push(getATCInfo(atc))
-            })
-            return Promise.all(results)
-        }).then(data => {console.log(data);resolve(data)})
-        .catch(err => reject(err))
-    });
-}
+// export function searchByActiveIngredient(text){
+//     return new Promise((resolve, reject) => {
+//         let results = []
+//         findDrugs(text).then((data) => {
+//             data.map((drug, idx) =>{
+//                 results.push(getATCInfo(drug.atc_code))
+//             });
+//             return Promise.all(results)
+//         }).then(data => resolve(data))
+//         .catch(err => {
+//             console.log('Falla FindDrugs!')
+//             reject(err)
+//         })
+//     });
+// }
+// export function searchBySpanishTradeName(text){
+//     return new Promise((resolve, reject) => {
+//         let results = []
+//         getSpanishMedicineATC(text)
+//         .then((data) => {
+//             console.log(data)
+//             data.map((atc) => {
+//                 console.log("HOLA")
+//                 results.push(getATCInfo(atc))
+//             })
+//             return Promise.all(results)
+//         }).then(data => {console.log(data);resolve(data)})
+//         .catch(err => reject(err))
+//     });
+// }

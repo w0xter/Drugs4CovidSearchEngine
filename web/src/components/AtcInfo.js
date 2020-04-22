@@ -1,119 +1,69 @@
 import React, {useState, useEffect} from 'react'
-import {List,Table, Typography, Tag, Row, Col, Space, Divider, Button, Tooltip} from 'antd'
+import {List,Table, Typography, Tag, Row, Col, Space, Divider, Button, Tooltip, Collapse} from 'antd'
 import {InfoCircleOutlined} from '@ant-design/icons'
 import MedicineCarousel from './MedicineCarousel'
+import { getArticleInfo } from '../api/requests'
 const {Title} = Typography
 const {Paragraph} = Typography
 const {Text} = Typography
+const {Panel} = Collapse
 
-export default function AtcInfo(props){
-    const capitalize = (s) => {
+export default class AtcInfo extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            data:this.props.data
+        }
+    }
+    capitalize = (s) => {
         if (typeof s !== 'string') return ''
         s = s.toLocaleLowerCase()
         return s.charAt(0).toUpperCase() + s.slice(1)
       }
-      const removeSpaces = (text) => {
+    removeSpaces = (text) => {
             if(typeof text !== 'string')
                 return ''
             return text.replace(/([ ])+/g, '')
         }
-      const relatedDrugs = {
-        columns:[
-            {
-                title:'Active Ingredient',
-                dataIndex:'activeingredient',
-                render: text => (<a href={"/search/activeingredient/" + removeSpaces(text)}>{text}</a> )
-            },
-            {
-                title:'ATC',
-                dataIndex:'atc',
-                render: text => (<a href={"/search/atc/" + removeSpaces(text)}>{text}</a>)
-            }
-        ],
-        data:[]
-    }
-    if(Object.keys(props.data.activeIngredients).length){
-        Object.keys(props.data.activeIngredients).map((key, idx) => {
-            relatedDrugs.data.push({key:idx, atc:key, activeingredient:capitalize(props.data.activeIngredients[key])})
-        })
-    }
+
+    render(){
     return(
         <>
-            {/* <Row gutter={[16,16]}>
+            <Row gutter={[16,16]}>
                 <Col>
-                <Tag color="blue">ATC: {props.data.atc_code}</Tag>
+                <Tag color="blue">ATC: {this.state.data.id}</Tag>
                 </Col>
                 <Col>
-                    <Tag color="geekblue">Parent ATC: {props.data.atc_parent}</Tag>
+                    <Tag color="geekblue">Parent ATC: {this.state.data.parent_s}</Tag>
                 </Col>
                 <Col>
-                        <Tag color="green">CUI: {props.data.cui}</Tag>
+                        <Tag color="green">CUI: {this.state.data.cui_s}</Tag>
                 </Col>
                 <Col>
-                        <Tag color="volcano">LEVEL: {props.data.level}</Tag>                        
+                        <Tag color="volcano">LEVEL: {this.state.data.level_i}</Tag>                        
                 </Col>
-            </Row>                         */}
+            </Row>                        
             <Title level={2}>
-                {props.data.name.toUpperCase()}
+                {this.capitalize(this.state.data.label_t)}
             </Title>
             <Divider></Divider>
-            { props.data.tradeMedicines.length !== 0 ?(
+            { this.state.data.tradeMedicines.length !== 0 ?(
             <div>
-                <MedicineCarousel medicines={props.data.tradeMedicines}></MedicineCarousel>
+                <MedicineCarousel medicines={this.state.data.tradeMedicines}></MedicineCarousel>
                 <Divider></Divider>
             </div>
             ):''
             }
-            {relatedDrugs.data.length !== 0 ? (
-                <div style={{  overflow:'auto'}}>
-                    <Title level={3}>Related Active Ingredients:</Title>
-                    <Table size="small"  columns={relatedDrugs.columns} dataSource={relatedDrugs.data}></Table>
-                    <Divider></Divider>
-                </div>
-            ):''}
-            {Object.keys(props.data.articles).length !== 0 ? (
-                <div>
-                    <List
-                        header={<Title level={3}>Related Articles:</Title>}
-                        itemLayout="horizontal"
-                        dataSource={props.data.articles}
-                        renderItem={item => (
-                        <List.Item>
-                                {item.name.length > 90? (
-                                    <Text color="blue">
-                                        <a href={item.url}>
-                                        {item.name.substring(0,80) + '... '}
-                                        </a>
-                                    <Tooltip trigger={['hover', 'click']} title={item.name} placement="bottom">
-                                        <InfoCircleOutlined />
-                                    </Tooltip>
-                                    </Text>
-                                ):(
-                                    <a href={item.url}>
-                                    {item.name}
-                                    </a>
-                                )}
-                        </List.Item>
-                        )}
-                    />
-                    <Divider></Divider>
-                </div>
-            ):''}                                       
-            <div style={{  overflow:'auto'}}>
-                <Title level={3}>Related Diseases:</Title>
-                <Space direction="vertical" size="small">
-                    <Row gutter={[8,8]} justify="left" align="middle">
-                    { Object.keys(props.data.diseases).map((disease) => {
-                        return(
-                        <Col>
-                            <Tag color="red">{disease}</Tag>
-                        </Col>
-                        )
-                    })}
-                    </Row>
-                </Space>
-            </div>
-            <Divider></Divider>        
+            <Collapse defaultActiveKey={[0]}>
+            {this.state.data.relatedArticles.map((item, idx) => (
+                <Panel ke={idx}>
+                    <Paragraph className="text-justify"> 
+                        {item.paragraph.text_t}
+                    </Paragraph>
+                </Panel>
+            ))}
+            </Collapse>
         </>
     )
+    }
 }
