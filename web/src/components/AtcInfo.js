@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {List,Table, Typography, Tag, Row, Col, Space, Divider, Button, Tooltip, Collapse} from 'antd'
 import {InfoCircleOutlined} from '@ant-design/icons'
 import MedicineCarousel from './MedicineCarousel'
+import RelatedArticlesCollapse from './RelatedArticlesCollapse'
 import { getArticleInfo } from '../api/requests'
 const {Title} = Typography
 const {Paragraph} = Typography
@@ -12,7 +13,8 @@ export default class AtcInfo extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            data:this.props.data
+            data:this.props.data,
+            articles:this.props.data.relatedArticles
         }
     }
     capitalize = (s) => {
@@ -54,15 +56,7 @@ export default class AtcInfo extends React.Component{
             </div>
             ):''
             }
-            <Collapse defaultActiveKey={[0]}>
-            {this.state.data.relatedArticles.map((item, idx) => (
-                <Panel ke={idx}>
-                    <Paragraph className="text-justify"> 
-                        {item.paragraph.text_t}
-                    </Paragraph>
-                </Panel>
-            ))}
-            </Collapse>
+                <RelatedArticlesCollapse data={this.state.data.relatedArticles}/>
         </>
     )
     }

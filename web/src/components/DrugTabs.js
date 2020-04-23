@@ -15,12 +15,6 @@ level: 5
 name: "paracetamol"
 */
 export default function DrugTabs({drugs}){
-    const capitalize = (s) => {
-        if (typeof s !== 'string') return ''
-        s = s.toLocaleLowerCase()
-        return s.charAt(0).toUpperCase() + s.slice(1)
-      }
-    console.log(drugs)    
     return(
         <>
         {drugs.length !== 0 ?(

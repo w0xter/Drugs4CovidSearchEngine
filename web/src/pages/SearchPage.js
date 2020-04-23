@@ -33,8 +33,6 @@ export default function SearchPage(props){
                     return Promise.reject('Invalid search field')
                 }
             }).then((data) => {
-                console.log("Resultado!")
-                console.log(data)
                 if(data.length !== 0){
                     message.success({ content: 'Loaded!', key, duration: 0.5 });
                     setResult(data)

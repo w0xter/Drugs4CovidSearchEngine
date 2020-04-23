@@ -5,6 +5,13 @@ const solr_atc = `${solr}/atc`
 const solr_diseases = `${solr}/diseases`
 const solr_paragraphs = `${solr}/covid-paragraphs`
 const solr_articles = `${solr}/covid`
+
+const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    s = s.toLocaleLowerCase()
+    return s.charAt(0).toUpperCase() + s.slice(1)
+    } 
+
 export function findDrugs(data){
     return new Promise((resolve, reject) => {
         const options = {
@@ -124,9 +131,18 @@ export function getParagraphIdByAtcCode(atcCode){
 //Artciles
 //No existe Article para este Paragraph: 0977b186510f6683611c39c89dd379b3
 export function getArticleInfo(id){
+    console.log(`${solr_articles}/select?fl=id%2Cname_s%2Curl_s&fq=id%3A${id}&q=*`)
     return new Promise((resolve, reject) => {
         axios.get(`${solr_articles}/select?fl=id%2Cname_s%2Curl_s&fq=id%3A${id}&q=*`).then((response) => {
-            resolve(response.data.response.docs[0])
+            if(Object.keys(response.data).includes('response') && 
+            Object.keys(response.data.response).includes('docs') && 
+            response.data.response.docs !== undefined && 
+            response.data.response.docs.length > 0
+            ){
+                resolve(response.data.response.docs[0])
+            }else{
+                resolve(null)
+            }
         }).catch((err) => reject(err))
     });
 }
@@ -152,4 +168,30 @@ export function getSpanishTradeNameMedicineInfo(data){
         axios.get(`https://cima.aemps.es/cima/rest/medicamento?nregistro=${data}`).then((response) => {
             resolve(response.data)
         }).catch((err) => reject(err))    })
+}
+
+// AUTOCOMPLETE
+//https://librairy.linkeddata.es/solr/atc/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0
+export function atcAutocompete(val){
+    return new Promise((resolve, reject) => {
+        axios.get(`${solr_atc}/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
+            let result = []
+            await response.data.response.docs.map((atc) => {
+                result.push({title:'ACT', type:'atc', id:atc.id,value:atc.id.toUpperCase()})
+            })
+            resolve(result)
+        }).catch((err) => reject(err))
+    })
+}
+
+export function activeIngredientAutocompete(val){
+    return new Promise((resolve, reject) => {
+        axios.get(`${solr_atc}/select?fl=label_t%2Cid&fq=label_t%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
+            let result = []
+            await response.data.response.docs.map((name) => {
+                result.push({title:'Generic Name',type:'genericname', id:name.id,value:capitalize(name.label_t)})
+            })
+            resolve(result)
+        }).catch((err) => reject(err))
+    })
 }

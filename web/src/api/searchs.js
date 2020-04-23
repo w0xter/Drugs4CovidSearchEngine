@@ -4,13 +4,19 @@ import {getSpanishTradeNameMedicineInfo,findSpanishTradeNameMedicine,getMedicine
 export function getAtcInfo(atc){
     return new Promise(async (resolve, reject) => {
         try{
-        const data = await getInfoByAtc(atc)
+        const id  = atc.toUpperCase()
+        const data = await getInfoByAtc(id)
         let result = await {tradeMedicines:[], relatedArticles:[], ...data}
         result.tradeMedicines = await  getMedicinesInfo(result.id)
         const actvIngrParagraphs = await getParagraphIdByActiveIngredient(result.label_t)
         const AtcParagraphs = await getParagraphIdByAtcCode(result.id)
-        const allArticles= [...AtcParagraphs, ...actvIngrParagraphs]
-        result.relatedArticles =  await getRelatedArticles(allArticles)
+        const paragraphsId= [...AtcParagraphs, ...actvIngrParagraphs]
+        const paragraphs =  await getRelatedParagraphs(paragraphsId)
+        const articles = await getRelatedArticles(paragraphs).catch((err) =>  console.log(err))
+        await paragraphs.map(async (p, idx) => {
+            let article = articles[idx]
+            result.relatedArticles.push({paragraph:p, article:article})
+        })
         resolve(result)
     }catch(err){
         reject(err)
@@ -18,21 +24,24 @@ export function getAtcInfo(atc){
     }
     })    
 }
-const getRelatedArticles = async (list) => {
-    return new Promise(async (resolve) => {
+const getRelatedArticles = (list) => {
+    let result = []
+    list.map((item) => {
+            result.push(getArticleInfo(item.article_id_s))
+    })
+    return Promise.all(result)
+}
+const getRelatedParagraphs = (list) => {
         let result = []
         let uniques = []
-        await list.map(async(item) => {
-        if(!uniques.includes(item.id)){
-            uniques.push(item.id)
-            const paragraphInfo = await getParagraphInfo(item.id).catch((err) => console.log(err))
-            const articleInfo = await getArticleInfo(paragraphInfo.article_id_s).catch(err => console.log(err))
-            result.push({paragraph:paragraphInfo, article:articleInfo !== undefined ? articleInfo:null}) 
-        }
-         resolve(result)
-    })
-})
-}
+        list.map((item) => {
+            if(!uniques.includes(item.id)){
+                uniques.push(item.id)
+                result.push(getParagraphInfo(item.id))
+            }
+        })
+        return Promise.all(result)
+    }
 export function searchByAtc(atc){
     return new Promise((resolve, reject) => {
         let result = {}
