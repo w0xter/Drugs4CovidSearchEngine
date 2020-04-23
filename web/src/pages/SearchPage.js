@@ -24,7 +24,7 @@ export default function SearchPage(props){
                     console.log("NOT YET")
                 }else if (type === 'spanish'){
                     console.log("NOT YET")
-                }else if (type === 'atc'){
+                }else if (type === 'drug'){
                     return searchByAtc(value)
                 }else{
                     setSearching(false)

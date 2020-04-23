@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {Input,Row, Col,Button, Tooltip, Radio, Typography, List, Avatar} from 'antd'
-import {atcAutocompete, activeIngredientAutocompete} from '../api/requests'
+import {atcAutocomplete, activeIngredientAutocomplete} from '../api/requests'
 import SearchD4c from '../assets/SearchIcon.js'
 import Icon from '@ant-design/icons';
 
@@ -13,23 +13,12 @@ export default class SearchBar extends React.Component{
         this.state= {
             suggestions:[],
             value:'',
-            defaultRadio:'atc',
-            radio:'atc'
         }
     }
-    componentDidMount(){
-    const searchTypes = ['atc', 'activeingredient', 'spanish']
-    const url = document.location.href.split("/")
-    const urlVal = url[url.length - 2]
-    if(searchTypes.includes(urlVal))
-        this.setState({defaultRadio:urlVal})
-    }
-    goTo = (value) => {
+
+    goTo = (type, value) => {
         const search = value !== undefined ? value:this.state.value
-        document.location.href=`/search/atc/${search}`
-    }
-    onChangeRadio = (e) => {
-        this.setState({radio:e.target.value})
+        document.location.href=`/search/${type}/${search}`
     }
     onSuggestionsFetchRequested = (e) => {
         
@@ -42,25 +31,15 @@ export default class SearchBar extends React.Component{
         suggestions: []
     });
     };
-    getAutoCompleteFunction(value){
-        switch(this.state.radio){
-            case 'atc':
-                return atcAutocompete(value.trim().toUpperCase())
-            case 'activeingredient':
-                return activeIngredientAutocompete(value)
-            default:
-                return null
-        }
-    }
+
     getSuggestions = value => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const inputValue = value;
-            let allSuggestions = []
             if(inputValue.length > 1){
-            this.getAutoCompleteFunction(inputValue).then((data) =>{
-                resolve(data)
-                console.log(allSuggestions)
-            }).catch((err) => resolve([]))
+                const atcs = await atcAutocomplete(inputValue.trim().toUpperCase())
+                const activeingredients = await activeIngredientAutocomplete(inputValue)
+                const allSuggestions = await [...atcs, ...activeingredients]
+                resolve(allSuggestions)
             }else{
                 resolve([])
             }
@@ -73,19 +52,7 @@ export default class SearchBar extends React.Component{
       };
       render(){
         return(    
-            <div style={{marginBottom:16}}>
-                    <Row style={{marginTop:10}} gutter={[16, 16]} align="middle">
-                        <Col>
-                        <Text level={4} type="secondary">Search by: </Text>
-                        </Col>
-                        <Col>
-                        <Radio.Group onChange={this.onChangeRadio} defaultValue={this.state.defaultRadio} size="small">
-                            <Radio.Button value="activeingredient">Active ingredient</Radio.Button>
-                            <Radio.Button value="atc">ATC code</Radio.Button>
-                            <Radio.Button value="spanish">Spanish Trade name 🇪🇸</Radio.Button>
-                        </Radio.Group>
-                        </Col>
-                    </Row>                
+            <div style={{marginBottom:16}}>           
                     <Input
                         placeholder="Write at least two characters to search"
                         size="large"
@@ -99,15 +66,10 @@ export default class SearchBar extends React.Component{
                     renderItem={(item) => (
                         <List.Item
                             style={{padding:10}}
-                            actions={[
-                            <Tooltip title="search">
-                                <Button onClick={() => this.goTo(item.id)} type="link" />
-                            </Tooltip>
-                            ]}
                         >
                             <List.Item.Meta
                                 title={<Text strong>{item.title} </Text>}
-                                description={<a onClick={() => this.goTo(item.id)}>{item.value}</a>}
+                                description={<a onClick={() => this.goTo(item.type,item.id)}>{item.value}</a>}
                             />
                             </List.Item>
                         )}

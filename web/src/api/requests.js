@@ -172,24 +172,24 @@ export function getSpanishTradeNameMedicineInfo(data){
 
 // AUTOCOMPLETE
 //https://librairy.linkeddata.es/solr/atc/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0
-export function atcAutocompete(val){
+export function atcAutocomplete(val){
     return new Promise((resolve, reject) => {
         axios.get(`${solr_atc}/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
             let result = []
             await response.data.response.docs.map((atc) => {
-                result.push({title:'ACT', type:'atc', id:atc.id,value:atc.id.toUpperCase()})
+                result.push({title:'ATC', type:'drug', id:atc.id,value:atc.id.toUpperCase()})
             })
             resolve(result)
         }).catch((err) => reject(err))
     })
 }
 
-export function activeIngredientAutocompete(val){
+export function activeIngredientAutocomplete(val){
     return new Promise((resolve, reject) => {
         axios.get(`${solr_atc}/select?fl=label_t%2Cid&fq=label_t%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
             let result = []
             await response.data.response.docs.map((name) => {
-                result.push({title:'Generic Name',type:'genericname', id:name.id,value:capitalize(name.label_t)})
+                result.push({title:'Generic Name',type:'drug', id:name.id,value:capitalize(name.label_t)})
             })
             resolve(result)
         }).catch((err) => reject(err))
