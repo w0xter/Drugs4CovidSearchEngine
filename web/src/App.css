@@ -48,3 +48,10 @@
     transform: rotate(360deg);
   }
 }
+.hoverEffect{
+  transition: 0.3s;
+}
+.hoverEffect:hover{
+  cursor: pointer;
+  box-shadow: 3px 3px  3px 3px grey;
+}

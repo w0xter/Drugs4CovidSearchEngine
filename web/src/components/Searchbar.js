@@ -3,6 +3,7 @@ import {Input,Row, Col,Button, Tooltip, Radio, Typography, List, Avatar} from 'a
 import {atcAutocomplete, activeIngredientAutocomplete} from '../api/requests'
 import SearchD4c from '../assets/SearchIcon.js'
 import Icon from '@ant-design/icons';
+import {MdClear} from 'react-icons/md'
 
 const {Text} = Typography
 const { Search } = Input;
@@ -15,7 +16,10 @@ export default class SearchBar extends React.Component{
             value:'',
         }
     }
-
+    clear = () => {
+        this.setState({value:''})
+         this.onSuggestionsClearRequested()
+    }
     goTo = (type, value) => {
         const search = value !== undefined ? value:this.state.value
         document.location.href=`/search/${type}/${search}`
@@ -56,8 +60,8 @@ export default class SearchBar extends React.Component{
                     <Input
                         placeholder="Write at least two characters to search"
                         size="large"
-                        allowClear
-                        suffix={<Icon onClick={() => this.goTo()} component={SearchD4c}/>}
+                        value={this.state.value}
+                        suffix={this.state.value.length === 0 ? <Icon component={SearchD4c}/>:<Button onClick={() => this.clear()} size="large" type="link" icon={<MdClear/>}/>}
                         onChange={e => {this.onSuggestionsFetchRequested(e); this.onChangeSearch(e)}}
                     />
                     {this.state.suggestions.length !== 0?(
@@ -67,8 +71,11 @@ export default class SearchBar extends React.Component{
                     renderItem={(item) => (
                         <List.Item
                             style={{padding:10}}
+                            className="hoverEffect"
+
                         >
                             <List.Item.Meta
+                                onClick={() => this.goTo(item.type,item.id)}
                                 title={<Text strong>{item.title} </Text>}
                                 description={<a onClick={() => this.goTo(item.type,item.id)}>{item.value}</a>}
                             />
