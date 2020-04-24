@@ -56,6 +56,7 @@ export default class SearchBar extends React.Component{
                     <Input
                         placeholder="Write at least two characters to search"
                         size="large"
+                        allowClear
                         suffix={<Icon onClick={() => this.goTo()} component={SearchD4c}/>}
                         onChange={e => {this.onSuggestionsFetchRequested(e); this.onChangeSearch(e)}}
                     />

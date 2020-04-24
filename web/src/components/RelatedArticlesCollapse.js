@@ -23,15 +23,18 @@ export default function RelatedArticles(props){
         <Collapse defaultActiveKey={['0']}>
             {
                 props.data.map((item, idx) => {
-                    const link = item.article != null ? item.article.url_s:'#'
-                    const title = item.article != null && Object.keys(item.article).includes('name_s') ? item.article.name_s:'Read the article' 
+                    const link = item.article !== null && Object.keys(item.article).includes('url_s') ? item.article.url_s:'#'
+                    const title = item.article !== null && Object.keys(item.article).includes('name_s') ? item.article.name_s:'Read the article' 
                     return(
                     <Panel header={
                         <>
                         <Text strong>{title} </Text>
-                        <a target="_blank" href={link}>
+                        { link !== "#" ?(
+                            <a target="_blank" href={link}>
                             <FiExternalLink/>
-                        </a>
+                            </a>
+                        ):''
+                        }
                         </>
                         } 
                     key={idx.toString()}>
