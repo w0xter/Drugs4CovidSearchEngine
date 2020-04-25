@@ -17,6 +17,11 @@ export default class AtcInfo extends React.Component{
             articles:this.props.data.relatedArticles
         }
     }
+    relatedWords = () => {
+        let result = [this.state.data.id]
+        result = result.concat(this.state.data.label_t.split(" "))
+        return result
+    }
     capitalize = (s) => {
         if (typeof s !== 'string') return ''
         s = s.toLocaleLowerCase()
@@ -56,7 +61,7 @@ export default class AtcInfo extends React.Component{
             </div>
             ):''
             }
-                <RelatedArticlesCollapse data={this.state.data.relatedArticles}/>
+                <RelatedArticlesCollapse relatedWords={this.relatedWords()} data={this.state.data.relatedArticles}/>
         </>
     )
     }

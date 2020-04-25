@@ -66,8 +66,9 @@ export default class Kg extends React.Component{
     render(){
     return(
         <>
-        <Card>
-        <Title level={4}>{this.state.question}</Title>
+        <Card 
+        headStyle={{background:'#0A7AA3'}}
+        title={<Title style={{color:'#ffffff'}} level={4}>{this.state.question}</Title>}>
             <Row gutter={[16,16]} align="top">
                 <Col>
                 <Button onClick={() => this.execute(this.state.sparqlQuery)}>
@@ -79,6 +80,15 @@ export default class Kg extends React.Component{
                     {this.state.showQuery ? 'Hide':'Show'} query {this.state.showQuery ? <EyeInvisibleOutlined/>:<EyeOutlined/>}
                 </Button>                
                 </Col>
+                {
+                    Object.keys(this.state.sparqlResult).length ?(
+                        <Col>
+                        <Button onClick={() => this.changeSparqlResultState()}>
+                                {this.state.showSparqlResult ? 'Hide':'Show'} result {this.state.showSparqlResult ? <EyeInvisibleOutlined/>:<EyeOutlined/>}
+                        </Button>                  
+                        </Col>                        
+                    ):''
+                }
             </Row>
             {this.state.showQuery ? (
                 <Tabs>
@@ -87,7 +97,6 @@ export default class Kg extends React.Component{
                             <Row gutter={[16,16]}>
                                 <Col>
                                 <Title level={4}>SPARQL Query</Title>
-
                                 </Col>
                                 <Col>
                                 <Button  onClick={() => this.execute(this.state.sparqlQuery)}>
@@ -127,17 +136,8 @@ export default class Kg extends React.Component{
                     </TabPane>
                 </Tabs>
             ):''}
-            { Object.keys(this.state.sparqlResult).length !== 0?(
-                <div>
-                    <Button onClick={() => this.changeSparqlResultState()}>
-                        {this.state.showSparqlResult ? 'Hide':'Show'} result {this.state.showSparqlResult ? <EyeInvisibleOutlined/>:<EyeOutlined/>}
-                    </Button>                            
-                    {
-                        this.state.showSparqlResult ?(
-                            <Table style={{marginTop:16}} dataSource={this.state.sparqlResult.data} columns={this.state.sparqlResult.columns}/>
-                        ):''
-                    }
-                </div>
+            { Object.keys(this.state.sparqlResult).length !== 0 && this.state.showSparqlResult?(
+                <Table style={{marginTop:16}} dataSource={this.state.sparqlResult.data} columns={this.state.sparqlResult.columns}/>
             ):''}            
         </Card>
         </>

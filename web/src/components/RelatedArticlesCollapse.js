@@ -1,5 +1,6 @@
 import React from 'react'
 import { Collapse, Typography, Badge,Divider } from 'antd'
+import Highlighter from "react-highlight-words";
 import {FiExternalLink} from 'react-icons/fi'
 const {Text} = Typography
 const {Title} = Typography
@@ -40,7 +41,13 @@ export default function RelatedArticles(props){
                     key={idx.toString()}>
                         <Text strong>Section: {item.paragraph.section_s}</Text>
                         <Paragraph className="text-justify">
-                        {item.paragraph.text_t}
+                        <Highlighter
+                            highlightClassName="YourHighlightClass"
+                            searchWords={props.relatedWords}
+                            autoEscape={true}
+                            textToHighlight={item.paragraph.text_t}
+                        />                        
+                        
                         </Paragraph>
                     </Panel>
                     )

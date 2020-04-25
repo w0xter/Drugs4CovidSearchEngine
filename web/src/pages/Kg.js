@@ -15,9 +15,14 @@ export default class Kg extends React.Component{
     render(){
     return(
         <Layout>
-            {this.state.queries.map((query) => (
-                    <QueryCard data={query}/>
+            <Row gutter={[16,16]} align="top">
+            {this.state.queries.map((query, idx) => (
+                <Col span={12}>
+                    <QueryCard key={idx} data={query}/>                
+                </Col>
             ))}
+            </Row>
+
         </Layout>
     )
     }
