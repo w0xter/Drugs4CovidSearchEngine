@@ -199,10 +199,20 @@ export function activeIngredientAutocomplete(val){
 export function fieldAutoComplete(field,type, value, search, title){
     return new Promise((resolve, reject) => {
         let results = []
-        console.log(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=30`)
-        axios.get(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=30`).then(async (response) =>{
+        console.log(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=10`)
+        axios.get(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=10`).then(async (response) =>{
             await response.data.response.docs.map((result) => {
-                    results.push({type:type,field:field, id:result.id, value:result[type],search:search, title:title })
+                    if(Array.isArray(result[type])){
+                        console.log(result[type])
+                        const arrayValues = result[type].filter(el =>
+                            el.toLowerCase().slice(0, value.length) === value.toLowerCase()
+                          )
+                        arrayValues.map((el) => {
+                            results.push({type:type,field:field, id:result.id, value:el,search:search, title:title })
+                        })
+                    }else{
+                        results.push({type:type,field:field, id:result.id, value:result[type],search:search, title:title })
+                    }
             })
             resolve(results)
         }).catch((err) => reject(err))
@@ -210,6 +220,7 @@ export function fieldAutoComplete(field,type, value, search, title){
 }
 export function autocomplete(value){
     let result = []
+    //{search:'disease',title:'Disease Synonym',type:'synonyms', value:value}
     const fields = [
         {
             field:solr_atc,
@@ -217,7 +228,7 @@ export function autocomplete(value){
         },
         {
             field:solr_diseases,
-            types:[{search:'disease',title:'MESH',type:'id', value:value.toUpperCase()},{search:'disease',title:'Disease Synonym',type:'synonyms', value:value}, {search:'disease',title:'Mapping',type:'mappings', value:value},{search:'disease',title:'Disease',type:'name_t', value:value} ]
+            types:[{search:'disease',title:'MESH',type:'id', value:value.toUpperCase()}, {search:'disease',title:'Mapping',type:'mappings', value:value},{search:'disease',title:'Disease',type:'name_t', value:value} ]
         }
     ]
     fields.map((field) => {

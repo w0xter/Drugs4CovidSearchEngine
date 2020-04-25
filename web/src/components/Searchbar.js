@@ -40,9 +40,15 @@ export default class SearchBar extends React.Component{
     getSuggestions = value => {
         return new Promise(async (resolve, reject) => {
             if(value.length > 1){
-                const result = await autocomplete(value)
-                console.log(result)
-                resolve(result)
+                const results = await autocomplete(value)
+                let result = []
+                await results.map((list) => {
+                    result = result.concat(list)
+                })
+                const filteredResult = await result.filter(el =>
+                    el.value.toLowerCase().slice(0, value.length) === value.toLowerCase()
+                  )
+                resolve(filteredResult)
             }else{
                 resolve([])
             }
@@ -75,9 +81,9 @@ export default class SearchBar extends React.Component{
 
                         >
                             <List.Item.Meta
-                                onClick={() => this.goTo(item.type,item.id)}
+                                onClick={() => this.goTo(item.search,item.id)}
                                 title={<Text strong>{item.title} </Text>}
-                                description={<a onClick={() => this.goTo(item.type,item.id)}>{item.value}</a>}
+                                description={<a onClick={() => this.goTo(item.search,item.id)}>{item.value}</a>}
                             />
                             </List.Item>
                         )}

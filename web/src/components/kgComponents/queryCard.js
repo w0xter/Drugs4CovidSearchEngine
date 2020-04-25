@@ -56,7 +56,7 @@ export default class Kg extends React.Component{
                   })
             })
             return Promise.resolve(result)
-        }).then((data) => this.setState({sparqlResult:data}))
+        }).then((data) => this.setState({sparqlResult:data, showSparqlResult:true}))
         .catch((err) => {
             console.log(err)
             message.error("Opps..")
