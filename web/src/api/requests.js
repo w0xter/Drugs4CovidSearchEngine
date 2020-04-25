@@ -1,10 +1,13 @@
 import axios from 'axios'
-const API = 'https://librairy.linkeddata.es/bio-nlp'
+const bio_api = 'https://librairy.linkeddata.es/bio-api'
 const solr = 'https://librairy.linkeddata.es/solr'
 const solr_atc = `${solr}/atc`
 const solr_diseases = `${solr}/diseases`
 const solr_paragraphs = `${solr}/covid-paragraphs`
 const solr_articles = `${solr}/covid`
+const bio_api_drugs = `${bio_api}/drugs`
+const bio_api_diseases = `${bio_api}/diseases`
+const bio_api_articles = `${bio_api}/texts`
 
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -12,18 +15,18 @@ const capitalize = (s) => {
     return s.charAt(0).toUpperCase() + s.slice(1)
     } 
 
-export function findDrugs(data){
-    return new Promise((resolve, reject) => {
-        const options = {
-            header:{
-                'Content-Type': 'application/json'
-            }
-        }
-        axios.post(`${API}/drugs`, {text:data}, options).then((response) => {
-            resolve(response.data)
-        }).catch(err => reject(err));
-    });
-}
+// export function findDrugs(data){
+//     return new Promise((resolve, reject) => {
+//         const options = {
+//             header:{
+//                 'Content-Type': 'application/json'
+//             }
+//         }
+//         axios.post(`${API}/drugs`, {text:data}, options).then((response) => {
+//             resolve(response.data)
+//         }).catch(err => reject(err));
+//     });
+// }
 //DRUGS
 export function getInfoByAtc(atc){
     return new Promise((resolve, reject) => {
@@ -171,30 +174,6 @@ export function getSpanishTradeNameMedicineInfo(data){
 }
 
 // AUTOCOMPLETE
-//https://librairy.linkeddata.es/solr/atc/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0
-export function atcAutocomplete(val){
-    return new Promise((resolve, reject) => {
-        axios.get(`${solr_atc}/select?fl=id&fq=id%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
-            let result = []
-            await response.data.response.docs.map((atc) => {
-                result.push({title:'ATC', type:'drug', id:atc.id,value:atc.id.toUpperCase()})
-            })
-            resolve(result)
-        }).catch((err) => reject(err))
-    })
-}
-
-export function activeIngredientAutocomplete(val){
-    return new Promise((resolve, reject) => {
-        axios.get(`${solr_atc}/select?fl=label_t%2Cid&fq=label_t%3A${val}*&q=*&rows=30&start=0`).then(async (response) => {
-            let result = []
-            await response.data.response.docs.map((name) => {
-                result.push({title:'Generic Name',type:'drug', id:name.id,value:capitalize(name.label_t)})
-            })
-            resolve(result)
-        }).catch((err) => reject(err))
-    })
-}
 
 export function fieldAutoComplete(field,type, value, search, title){
     return new Promise((resolve, reject) => {
@@ -237,4 +216,47 @@ export function autocomplete(value){
         })
     })
     return Promise.all(result)
+}
+
+export function relatedDrugs(data){
+    const options = {
+        params:{
+            keywords:data.keywords,
+    
+            size:10
+        }
+    }
+    return new Promise((resolve, reject) => {
+        axios.get(`${bio_api_drugs}?keywords=${data.keywords}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => reject(err));
+    });
+}
+
+export function relatedDiseases(data){
+    const options = {
+        params:{
+            keywords:data.keywords,
+            size:10
+        }
+    }
+    return new Promise((resolve, reject) => {
+        axios.get(`${bio_api_diseases}?keywords=${data.keywords}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => reject(err));
+    });
+}
+export function relatedArticles(data){
+    const options = {
+        params:{
+            keywords:data.keywords,
+            size:10
+        }
+    }
+    console.log(`${bio_api_articles}?keywords=${data.keywords}`)
+    return new Promise((resolve, reject) => {
+        axios.get(`${bio_api_articles}?keywords=${data.keywords}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => reject(err));
+    });
 }

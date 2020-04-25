@@ -76,12 +76,12 @@ export default class SearchBar extends React.Component{
                     dataSource={this.state.suggestions}
                     renderItem={(item) => (
                         <List.Item
+                            onClick={() => this.goTo(item.search,item.id)}
                             style={{padding:10}}
                             className="hoverEffect"
 
                         >
                             <List.Item.Meta
-                                onClick={() => this.goTo(item.search,item.id)}
                                 title={<Text strong>{item.title} </Text>}
                                 description={<a onClick={() => this.goTo(item.search,item.id)}>{item.value}</a>}
                             />

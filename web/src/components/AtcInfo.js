@@ -4,11 +4,18 @@ import {InfoCircleOutlined} from '@ant-design/icons'
 import MedicineCarousel from './MedicineCarousel'
 import RelatedArticlesCollapse from './RelatedArticlesCollapse'
 import { getArticleInfo } from '../api/requests'
+import {FiExternalLink} from 'react-icons/fi'
+
 const {Title} = Typography
 const {Paragraph} = Typography
 const {Text} = Typography
 const {Panel} = Collapse
 const uselessWords = ["and", "or"]
+const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    s = s.toLocaleLowerCase()
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
 export default class AtcInfo extends React.Component{
     constructor(props){
         super(props);
@@ -33,8 +40,12 @@ export default class AtcInfo extends React.Component{
                 return ''
             return text.replace(/([ ])+/g, '')
         }
+    goTo = (field, id) => {
+        document.location.href=`/search/${field}/${id}`
+    }
 
     render(){
+        console.log(this.state.data)
     return(
         <>
             <Row gutter={[16,16]}>
@@ -61,8 +72,76 @@ export default class AtcInfo extends React.Component{
                 <Divider></Divider>
             </div>
             ):''
-            }
+            }{this.state.data.relatedArticles.length !== 0?(
                 <RelatedArticlesCollapse relatedWords={this.relatedWords()} data={this.state.data.relatedArticles}/>
+
+            ):''
+            }
+            <Row gutter={[16,16]}>
+                <Col xs={24} md={12}>
+                {
+                this.state.data.relatedDrugs.length !== 0 ?(
+                    <>
+                    <List
+                    size="small"
+                    header={<Title level={3}>Related Drugs</Title>}
+                    dataSource={this.state.data.relatedDrugs}
+                    renderItem={(item) => (
+                        <List.Item
+                            style={{padding:10}}
+                            onClick={() => this.goTo('drug',item.code)}
+                            className="hoverEffect"
+                            actions={[ <a href={`/search/drug/${item.code}`}><FiExternalLink/></a>]}
+                        >
+                        <List.Item.Meta
+                            title={<Text strong>{capitalize(item.name)}</Text>}
+                            description={
+                                <Tag color="blue">
+                                ATC {item.code}
+                                </Tag>
+                            }
+                        />
+                        </List.Item>
+                        )}
+                    />
+                    <Divider></Divider>
+                    </>
+                ):''
+            }                
+                </Col>
+                <Col xs ={24} md={12}>
+                {
+                this.state.data.relatedDiseases.length !== 0 ?(
+                    <>
+                    <List
+                    size="small"
+                    header={<Title level={3}>Related Diseases</Title>}
+                    dataSource={this.state.data.relatedDiseases}
+                    renderItem={(item) => (
+                        <List.Item
+                            style={{padding:10}}
+                            onClick={() => this.goTo('disease',item.code)}
+                            className="hoverEffect"
+                            actions={[ <a href={`/search/drug/${item.code}`}><FiExternalLink/></a>]}
+                        >
+                        <List.Item.Meta
+                            title={<Text strong>{capitalize(item.name)}</Text>}
+                            description={
+                                <Tag color="red">
+                                MESH {item.code}
+                                </Tag>
+                            }
+                        />
+                        </List.Item>
+                        )}
+                    />
+                    <Divider></Divider>
+                    </>
+                ):''
+            }                 
+                </Col>
+            </Row>           
+            
         </>
     )
     }
