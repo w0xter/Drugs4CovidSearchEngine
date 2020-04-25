@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {Input,Row, Col,Button, Tooltip, Radio, Typography, List, Avatar} from 'antd'
-import {atcAutocomplete, activeIngredientAutocomplete} from '../api/requests'
+import {atcAutocomplete, activeIngredientAutocomplete, autocomplete} from '../api/requests'
 import SearchD4c from '../assets/SearchIcon.js'
 import Icon from '@ant-design/icons';
 import {MdClear} from 'react-icons/md'
@@ -36,14 +36,13 @@ export default class SearchBar extends React.Component{
     });
     };
 
+
     getSuggestions = value => {
         return new Promise(async (resolve, reject) => {
-            const inputValue = value;
-            if(inputValue.length > 1){
-                const atcs = await atcAutocomplete(inputValue.trim().toUpperCase())
-                const activeingredients = await activeIngredientAutocomplete(inputValue)
-                const allSuggestions = await [...atcs, ...activeingredients]
-                resolve(allSuggestions)
+            if(value.length > 1){
+                const result = await autocomplete(value)
+                console.log(result)
+                resolve(result)
             }else{
                 resolve([])
             }
@@ -54,6 +53,7 @@ export default class SearchBar extends React.Component{
           value: e.target.value
         });
       };
+
       render(){
         return(    
             <div style={{marginBottom:16}}>           

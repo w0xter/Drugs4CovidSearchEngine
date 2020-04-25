@@ -195,3 +195,35 @@ export function activeIngredientAutocomplete(val){
         }).catch((err) => reject(err))
     })
 }
+
+export function fieldAutoComplete(field,type, value, search, title){
+    return new Promise((resolve, reject) => {
+        let results = []
+        console.log(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=30`)
+        axios.get(`${field}/select?fl=id%2C%20${type}&fq=${type}%3A${value}*&q=*&rows=30`).then(async (response) =>{
+            await response.data.response.docs.map((result) => {
+                    results.push({type:type,field:field, id:result.id, value:result[type],search:search, title:title })
+            })
+            resolve(results)
+        }).catch((err) => reject(err))
+    })
+}
+export function autocomplete(value){
+    let result = []
+    const fields = [
+        {
+            field:solr_atc,
+            types:[{title:'ATC',search:'drug',type:'id', value:value.toUpperCase()}, {search:'drug',title:'Generic Name',type:'label_t', value:value}]
+        },
+        {
+            field:solr_diseases,
+            types:[{search:'disease',title:'MESH',type:'id', value:value.toUpperCase()},{search:'disease',title:'Disease Synonym',type:'synonyms', value:value}, {search:'disease',title:'Mapping',type:'mappings', value:value},{search:'disease',title:'Disease',type:'name_t', value:value} ]
+        }
+    ]
+    fields.map((field) => {
+        field.types.map((type) => {
+            result.push(fieldAutoComplete(field.field, type.type, type.value, type.search, type.title))
+        })
+    })
+    return Promise.all(result)
+}
