@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import SearchPage from './pages/SearchPage'
 import './App.css';
 import 'antd/dist/antd.css';
+import Kg from './pages/Kg';
 function App() {
   return (
     <Router>
@@ -12,6 +13,7 @@ function App() {
           <Home/>
         </Route>
         <Route path="/search/:searchType/:drugsNames" component={SearchPage}/>
+        <Route exact path="/KG" component={Kg}/>
       </Switch>
     </Router>
   );
