@@ -17,13 +17,11 @@ export default function SearchPage(props){
 
     const sendData = (value) => {
         let key = 'updatable'
-        if(value.length !== 0){
+        if(value.length !== 0 && searchType !== "disease"){
             Promise.resolve(searchType)
             .then((type) => {
-                if(type === 'activeingredient'){
-                    console.log("NOT YET")
-                }else if (type === 'spanish'){
-                    console.log("NOT YET")
+                if(type === 'disease'){
+                   return Promise.resolve([])
                 }else if (type === 'drug'){
                     return searchByAtc(value)
                 }else{
@@ -48,7 +46,9 @@ export default function SearchPage(props){
                 setError(true)
             })
         }else{
-            message.error({content:"The search field is empty!", key, duration:2})
+            message.error("Oops, somenthing goes wrong please try it again...")
+            setSearching(false)
+            setError(true)        
         }
     }
 

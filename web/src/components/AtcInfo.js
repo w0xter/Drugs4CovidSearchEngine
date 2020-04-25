@@ -8,7 +8,7 @@ const {Title} = Typography
 const {Paragraph} = Typography
 const {Text} = Typography
 const {Panel} = Collapse
-
+const uselessWords = ["and", "or"]
 export default class AtcInfo extends React.Component{
     constructor(props){
         super(props);
@@ -19,7 +19,8 @@ export default class AtcInfo extends React.Component{
     }
     relatedWords = () => {
         let result = [this.state.data.id]
-        result = result.concat(this.state.data.label_t.split(" "))
+        result = result.concat(this.state.data.label_t.replace(/([,])+/g, '').split(" "))
+        result = result.filter((word) => !uselessWords.includes(word))
         return result
     }
     capitalize = (s) => {
