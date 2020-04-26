@@ -1,9 +1,39 @@
-const queries = [
-     {title:'What ATC codes are mentioned in each article?', sparql:'select distinct ?paper, ?mention where {\n?paper a <https://w3id.org/def/DRUGS4COVID19#Paper>.\n?paper <https://w3id.org/def/DRUGS4COVID19/menciona> ?mention .\n} limit 10\n', graphql_ld_:''},
-     {title:'What ATC codes are mentioned in each article?', sparql:'select distinct ?paper, ?mention where {\n?paper a <https://w3id.org/def/DRUGS4COVID19#Paper>.\n?paper <https://w3id.org/def/DRUGS4COVID19/menciona> ?mention .\n} limit 10\n', graphql_ld_:''},
-     {title:'What ATC codes are mentioned in each article?', sparql:'select distinct ?paper, ?mention where {\n?paper a <https://w3id.org/def/DRUGS4COVID19#Paper>.\n?paper <https://w3id.org/def/DRUGS4COVID19/menciona> ?mention .\n} limit 10\n', graphql_ld_:''},
-     {title:'What ATC codes are mentioned in each article?', sparql:'select distinct ?paper, ?mention where {\n?paper a <https://w3id.org/def/DRUGS4COVID19#Paper>.\n?paper <https://w3id.org/def/DRUGS4COVID19/menciona> ?mention .\n} limit 10\n', graphql_ld_:''},
-     {title:'What ATC codes are mentioned in each article?', sparql:'select distinct ?paper, ?mention where {\n?paper a <https://w3id.org/def/DRUGS4COVID19#Paper>.\n?paper <https://w3id.org/def/DRUGS4COVID19/menciona> ?mention .\n} limit 10\n', graphql_ld_:''},
+const virtuosoQueries = [
+     {title:'Articles discussing amphotericin B and COVID-19',description:'Paragraphs that mention a certain active substance and a certain disorder, and the name and source of the corresponding paper.', sparql:"#Instances: amphotericin B , Disorder: COVID-19 MESHCode C000657245\n\nPREFIX d4covid:<https://w3id.org/def/DRUGS4COVID19#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos:<http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\nSELECT  DISTINCT ?section ?titleDisease ?paperTitle ?completePaper\nWHERE {\n?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paragraph d4covid:mentions ?activeSubstance .\n?activeSubstance skos:prefLabel  'amphotericin B'@en  .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease .\n}\n", graphql_ld_:''},
+     {title:"Articles discussing drugs of the amphotericin B family (same ATC4) and COVID-19 with upper level ATC4Code:(ATC4 of amphotericin B:)", sparql:"PREFIX d4covid:<https://w3id.org/def/DRUGS4COVID19#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos:<http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\nSELECT  DISTINCT ?section ?titleDisease ?paperTitle ?completePaper ?labelFamilySubstance\nWHERE\n{\n?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paper d4covid:mentions ?familySubstance .\n?familySubstance skos:prefLabel ?labelFamilySubstance .\n?activeSubstance rdfs:subClassOf ?familySubstance .\n?activeSubstance skos:prefLabel  'amphotericin B'@en  .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease .\n}", graphql_ld_:''},
+     {title:'Immunostimulants related to COVID-19',
+     description:'Documents that mention other immunostimulants in ATC (ATC code L03AX) and all of the ATCs in lower levels and the disease COVID-19 We should add “and related diseases” if the annotation “mapping” which corresponds to related diseases is mapped to the KG. This query can be ranked, the results with more specific levels in the ATC codes can appear first.\nMotivation: Documents that mention the BCG vaccine (ATC code L03AX03) (vaccine against the tuberculosis Bacteria) because there are studies that link the vaccine with partial immunization  to COVID-19.',
+     sparql:"PREFIX d4covid:<https://w3id.org/def/DRUGS4COVID19#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos:<http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\nSELECT  DISTINCT ?section ?titleDisease ?paperTitle ?completePaper ?labelATCLevel5\n{\n{?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paper d4covid:mentions ?activeSubstance .\n?activeSubstance skos:notation 'L03AX'^^xsd:string .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease .   }\nUNION\n{\n?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paper d4covid:mentions ?L5LevelSubstance .\n?activeSubstance skos:notation 'L03AX'^^xsd:string .\n?L5LevelSubstance  rdfs:subClassOf ?activeSubstance .\n?L5LevelSubstance skos:prefLabel ?labelATCLevel5 .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease . }\n}",
+     graphql_ld_:''},
+     {title:'Immunostimulants related to COVID-19? (ordered by specificity)',
+     description:'Con ranking: los documentos que contengan los ATC más específicos aparecerán primero.',
+     sparql:"PREFIX d4covid:<https://w3id.org/def/DRUGS4COVID19#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos:<http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\nSELECT  DISTINCT ?section ?titleDisease ?paperTitle ?completePaper ?labelATCLevel5\n{\n{?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paper d4covid:mentions ?activeSubstance .\n?activeSubstance skos:notation 'L03AX'^^xsd:string .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease .   }\nUNION\n{\n?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paper rdfs:seeAlso ?completePaper .\n?paper d4covid:mentions ?L5LevelSubstance .\n?activeSubstance skos:notation 'L03AX'^^xsd:string .\n?L5LevelSubstance  rdfs:subClassOf ?activeSubstance .\n?L5LevelSubstance skos:prefLabel ?labelATCLevel5 .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease . }\nBIND (IF(BOUND(?L5LevelSubstance),5,0)+IF(BOUND(?activeSubstance),1,0)AS ?score)\n}\nORDER BY DESC(?score)",
+     graphql_ld_:''},
+     {title:"Diseases related to drugs that combine  immunosuppressant  and antimalarial activities with macrolide antibiotics",
+     description:"Paragraphs with drugs that combine immunosuppressant  and antimalarial activities with macrolide antibiotics, the diseases that appear in these paragraphs, and the title and problem of the corresponding paper.",
+     sparql:"PREFIX d4covid:<https://w3id.org/def/DRUGS4COVID19#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos:<http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?section ?paperTitle ?notation2 ?titleDisease\nWHERE {\n?paragraph a d4covid:Paragraph .\n?paragraph d4covid:section ?section .\n?paper d4covid:contains ?paragraph .\n?paper dc:title ?paperTitle .\n?paragraph d4covid:mentions ?activeSubstance1 .\n?paragraph d4covid:mentions ?activeSubstance2 .\n?activeSubstance1 skos:notation \"P01BA02\"^^xsd:string .\n?activeSubstance2 skos:notation  ?notation2 .\n?paragraph d4covid:mentions ?disease .\n?disease a d4covid:Disease .\n?disease d4covid:MESHCode 'C000657245' .\n?disease dc:title ?titleDisease .\nFILTER (STRSTARTS(?notation2,\"J01FA\"))\n}",     
+     graphql_ld_:''},
 
 ]
-export default queries
+const solrQueries = [
+     {
+          question:'What vaccines are used to treat the flu?',
+          type:'keywords',
+          search:['drugs'],
+          keywords:'flu,vaccine',
+          atc:5
+     },
+     {
+          question:"What are the articles that mention Paracetamol and Coronavirus?",
+          type:'keywords',
+          search:['texts'],
+          keywords:'paracetamol,coronavirus'
+     },
+     {
+          question:"What diseases are treated with Lopinavir?",
+          type:'keywords',
+          search:['diseases'],
+          keywords:'lopinavir'
+     }
+]
+export {virtuosoQueries, solrQueries}

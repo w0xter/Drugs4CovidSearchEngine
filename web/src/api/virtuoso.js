@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API = "https://librairy.linkeddata.es/sparql"
+const API = "https://kg.drugs4covid.oeg-upm.net/sparql"
 export function sendQuery(query){
     const options = {
         params:{

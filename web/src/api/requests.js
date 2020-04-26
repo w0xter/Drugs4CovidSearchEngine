@@ -8,6 +8,7 @@ const solr_articles = `${solr}/covid`
 const bio_api_drugs = `${bio_api}/drugs`
 const bio_api_diseases = `${bio_api}/diseases`
 const bio_api_articles = `${bio_api}/texts`
+const bio_api_replacements = `${bio_api}/replacements`
 
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -218,7 +219,7 @@ export function autocomplete(value){
     return Promise.all(result)
 }
 
-export function relatedDrugs(data){
+export function getRelatedDrugs(data){
     const options = {
         params:{
             keywords:data.keywords,
@@ -233,7 +234,7 @@ export function relatedDrugs(data){
     });
 }
 
-export function relatedDiseases(data){
+export function getRelatedDiseases(data){
     const options = {
         params:{
             keywords:data.keywords,
@@ -246,16 +247,24 @@ export function relatedDiseases(data){
         }).catch(err => reject(err));
     });
 }
-export function relatedArticles(data){
+export function getRelatedArticles(data){
     const options = {
         params:{
             keywords:data.keywords,
             size:10
         }
     }
-    console.log(`${bio_api_articles}?keywords=${data.keywords}`)
     return new Promise((resolve, reject) => {
         axios.get(`${bio_api_articles}?keywords=${data.keywords}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => reject(err));
+    });
+}
+
+export function getDrugsReplacements(data){
+    console.log(`${bio_api_replacements}?keywords=${data.keywords}`)
+    return new Promise((resolve, reject) => {
+        axios.get(`${bio_api_replacements}?size=5&keywords=${data.keywords}`).then((response) => {
             resolve(response.data)
         }).catch(err => reject(err));
     });

@@ -68,7 +68,7 @@ export default class AtcInfo extends React.Component{
                 <Row gutter={[8,8]}>
                     {this.state.data.parent.map((parent) => (
                         <Col>
-                            <Tag onClick={() => this.goTo('disease',this.state.data.parent_s )} className="hoverEffect" color="purple">{parent}</Tag>
+                            <Tag onClick={() => this.goTo('disease',parent )} className="hoverEffect" color="purple">{parent}</Tag>
                         </Col>
                     ))}
     

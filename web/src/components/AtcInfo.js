@@ -77,6 +77,35 @@ export default class AtcInfo extends React.Component{
 
             ):''
             }
+            {this.state.data.replacementDrugs.length !==0?(
+                <Row>
+                    <Col span={24}>
+                        <List
+                            size="small"
+                            header={<Title level={3}>We have found these possible substitutes</Title>}
+                            dataSource={this.state.data.replacementDrugs}
+                            renderItem={(item) => (
+                                <List.Item
+                                    style={{padding:10}}
+                                    onClick={() => this.goTo('drug',item.code)}
+                                    className="hoverEffect"
+                                    actions={[ <a href={`/search/drug/${item.code}`}><FiExternalLink/></a>]}
+                                >
+                                <List.Item.Meta
+                                    title={<Text strong>{capitalize(item.name)}</Text>}
+                                    description={
+                                        <Tag color="blue">
+                                        ATC {item.code}
+                                        </Tag>
+                                    }
+                                />
+                                </List.Item>
+                                )}
+                            />
+                            <Divider></Divider>
+                    </Col>
+                </Row>
+            ):''}
             <Row gutter={[16,16]}>
                 <Col xs={24} md={12}>
                 {

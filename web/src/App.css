@@ -35,6 +35,10 @@
 .App-link {
   color: #61dafb;
 }
+.shadowEffect{
+  box-shadow: 1.5px 1.5px  1.5px 1.5px grey;
+
+}
 .responsiveImg{
   width: 100%!important;
   height: auto;

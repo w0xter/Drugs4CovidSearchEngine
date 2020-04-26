@@ -16,7 +16,8 @@ export default class Kg extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            question:this.props.data.title,
+            title:this.props.data.title,
+            description:this.props.data.description,
             sparqlQuery:this.props.data.sparql,
             editedSparqlQuery:this.props.data.sparql,
             editSparqlQuery:false,
@@ -52,7 +53,7 @@ export default class Kg extends React.Component{
                     title:capitalize(col.toString()),
                     dataIndex: col,
                     key: col,
-                    render: val => val.value
+                    render: val => val !== undefined?val.value:''
                   })
             })
             return Promise.resolve(result)
@@ -67,8 +68,23 @@ export default class Kg extends React.Component{
     return(
         <>
         <Card 
-        headStyle={{background:'#0A7AA3'}}
-        title={<Title style={{color:'#ffffff'}} level={4}>{this.state.question}</Title>}>
+        className="shadowEffect"
+        >
+            <Row>
+                <Col>
+                <Title level={4}>{this.state.title}</Title>
+                </Col>
+            </Row>
+            {this.state.description !== undefined ?(
+            <Row>
+                <Col>
+                    <Paragraph>
+                        {this.state.description}
+                    </Paragraph>
+                </Col>
+            </Row>
+            ):''}
+
             <Row gutter={[16,16]} align="top">
                 <Col>
                 <Button onClick={() => this.execute(this.state.sparqlQuery)}>

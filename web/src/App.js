@@ -5,6 +5,7 @@ import SearchPage from './pages/SearchPage'
 import './App.css';
 import 'antd/dist/antd.css';
 import Kg from './pages/Kg';
+import CustomSearchPage from './pages/CustomSearchPage';
 function App() {
   return (
     <Router>
@@ -14,6 +15,7 @@ function App() {
         </Route>
         <Route path="/search/:searchType/:drugsNames" component={SearchPage}/>
         <Route exact path="/KG" component={Kg}/>
+        <Route exact path="/customsearch/" component={CustomSearchPage}/>
       </Switch>
     </Router>
   );
