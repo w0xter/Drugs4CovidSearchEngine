@@ -5,7 +5,7 @@ import SearchBar from '../components/Searchbar'
 import DrugTabs from '../components/DrugTabs'
 import Layout from '../components/Layout'
 import abduction from '../assets/abduction.svg'
-import {searchByActiveIngredient, searchBySpanishTradeName, searchByAtc} from '../api/searchs'
+import {searchByActiveIngredient, searchBySpanishTradeName, searchByMesh,searchByAtc} from '../api/searchs'
 const {Title} = Typography
 export default function SearchPage(props){
     const antIcon = <LoadingOutlined style={{ fontSize: 72 }} spin />;
@@ -17,11 +17,11 @@ export default function SearchPage(props){
 
     const sendData = (value) => {
         let key = 'updatable'
-        if(value.length !== 0 && searchType !== "disease"){
+        if(value.length !== 0){
             Promise.resolve(searchType)
             .then((type) => {
                 if(type === 'disease'){
-                   return Promise.resolve([])
+                    return searchByMesh(value)
                 }else if (type === 'drug'){
                     return searchByAtc(value)
                 }else{
@@ -58,7 +58,7 @@ export default function SearchPage(props){
         return(
             <Layout>
             <SearchBar></SearchBar>
-            {result.length !== 0 ? <DrugTabs drugs={result}></DrugTabs>:searching ? (
+            {result.length !== 0 ? <DrugTabs type={searchType} drugs={result}></DrugTabs>:searching ? (
                 <Row align="middle" justify="center" style={{marginTop:20}}>
                     <Col justify="center">
                         <Spin indicator={antIcon} />                    

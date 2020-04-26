@@ -1,30 +1,39 @@
-import {getSpanishTradeNameMedicineInfo,findSpanishTradeNameMedicine,getMedicinesInfo, getInfoByAtc, getParagraphIdByActiveIngredient, getParagraphInfo, getParagraphIdByAtcCode, relatedArticles, relatedDiseases, getArticleInfo,relatedDrugs} from './requests'
+import {getSpanishTradeNameMedicineInfo,
+        findSpanishTradeNameMedicine,
+        getMedicinesInfo,
+        getInfoByAtc,
+        getDiseaseInfo,
+        relatedArticles,
+        relatedDiseases,
+        relatedDrugs} from './requests'
 
-
+export function getMeshInfo(mesh){
+    return new Promise(async (resolve, reject) => {
+        try{
+            const id = mesh.toUpperCase()
+            const data = await getDiseaseInfo(id)
+            const options = {keywords:`'${data.name_t.toLowerCase()}'`}
+            let result = await {tradeMedicines:[],relatedDrugs:[], relatedArticles:[],relatedDiseases:[], ...data}
+            result.relatedArticles = await relatedArticles(options)
+            result.relatedDiseases = await relatedDiseases(options)
+            result.relatedDrugs  = await relatedDrugs(options)
+            resolve(result)
+        }catch(err){
+            reject(err)
+        }
+    })
+}
 export function getAtcInfo(atc){
     return new Promise(async (resolve, reject) => {
         try{
         const id  = atc.toUpperCase()
         const data = await getInfoByAtc(id)
-        const options = {keywords:`${data.label_t},${id}`}
+        const options = {keywords:`'${data.label_t.toLowerCase()}'`}
         let result = await {tradeMedicines:[],relatedDrugs:[], relatedArticles:[],relatedDiseases:[], ...data}
         result.tradeMedicines = await  getMedicinesInfo(result.id)
-        //const paragraphs = []//await relatedArticles(options)
-        const actvIngrParagraphs = await getParagraphIdByActiveIngredient(result.label_t)
-        const AtcParagraphs = await getParagraphIdByAtcCode(result.id)
-        const paragraphsId= [...AtcParagraphs, ...actvIngrParagraphs]
-        const paragraphs =  await getRelatedParagraphs(paragraphsId)
-        const diseases = await relatedDiseases(options)
-        result.relatedDiseases = diseases
-        const drugs = await relatedDrugs(options)
-        result.relatedDrugs = drugs 
-        console.log(drugs)
-        const articles = await getRelatedArticles(paragraphs).catch((err) =>  console.log(err))
-        console.log(articles)
-        await paragraphs.map(async (p, idx) => {
-            let article = articles[idx]
-            result.relatedArticles.push({paragraph:p, article:article})
-        })
+        result.relatedArticles = await relatedArticles(options)
+        result.relatedDiseases = await relatedDiseases(options)
+        result.relatedDrugs  = await relatedDrugs(options)
         resolve(result)
     }catch(err){
         reject(err)
@@ -32,28 +41,19 @@ export function getAtcInfo(atc){
     }
     })    
 }
-const getRelatedArticles = (list) => {
-    let result = []
-    list.map((item) => {
-            result.push(getArticleInfo(item.article_id_s))
-    })
-    return Promise.all(result)
-}
-const getRelatedParagraphs = (list) => {
-    let result = []
-    let uniques = []
-    list.map((item) => {
-        if(!uniques.includes(item.id)){
-            uniques.push(item.id)
-            result.push(getParagraphInfo(item.id))
-        }
-    })
-    return Promise.all(result)
-}
+
 export function searchByAtc(atc){
     return new Promise((resolve, reject) => {
         let result = {}
         getAtcInfo(atc).then((data) => {
+            resolve([data])
+        }).catch(err => reject(err))
+    })
+}
+export function searchByMesh(atc){
+    return new Promise((resolve, reject) => {
+        let result = {}
+        getMeshInfo(atc).then((data) => {
             resolve([data])
         }).catch(err => reject(err))
     })

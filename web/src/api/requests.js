@@ -54,7 +54,7 @@ export function getAtcByCimaCode(cima_code){
 export function getDiseaseInfo(id){
     return new Promise((resolve, reject) =>  {
         axios.get(`${solr_diseases}/select?fq=id%3A${id}&q=*`).then((response) => {
-            resolve(response.data.response.docs)
+            resolve(response.data.response.docs[0])
         }).catch(err => reject(err))        
     })
 }

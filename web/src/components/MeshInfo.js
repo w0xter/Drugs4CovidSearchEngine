@@ -26,7 +26,7 @@ export default class AtcInfo extends React.Component{
     }
     relatedWords = () => {
         let result = [this.state.data.id]
-        result = result.concat(this.state.data.label_t.replace(/([,])+/g, '').split(" "))
+        result = result.concat(this.state.data.name_t.replace(/([,])+/g, '').split(" "))
         result = result.filter((word) => !uselessWords.includes(word))
         return result
     }
@@ -49,30 +49,43 @@ export default class AtcInfo extends React.Component{
     return(
         <>
             <Title level={2}>
-                Drug: {this.capitalize(this.state.data.label_t)}
+               Disease: {this.capitalize(this.state.data.name_t)}
             </Title>
             <Row gutter={[16,16]}>
                 <Col>
-                <Tag color="blue">ATC: {this.state.data.id}</Tag>
-                </Col>
-                <Col>
-                    <Tag className="hoverEffect" color="geekblue" onClick={() => this.goTo('drug',this.state.data.parent_s )}>Parent ATC: {this.state.data.parent_s}</Tag>
-                </Col>
-                <Col>
-                        <Tag color="green">CUI: {this.state.data.cui_s}</Tag>
+                <Tag color="red">MESH: {this.state.data.id}</Tag>
                 </Col>
                 <Col>
                         <Tag color="volcano">LEVEL: {this.state.data.level_i}</Tag>                        
                 </Col>
-            </Row>                        
+            </Row>
+            {
+                this.state.data.parent.length !== 0 ?(
+                <div>
+                <Text strong>
+                    MESH Parents:    
+                </Text>        
+                <Row gutter={[8,8]}>
+                    {this.state.data.parent.map((parent) => (
+                        <Col>
+                            <Tag onClick={() => this.goTo('disease',this.state.data.parent_s )} className="hoverEffect" color="purple">{parent}</Tag>
+                        </Col>
+                    ))}
+    
+                </Row> 
+                </div>
+                ):''
+            }
+               
             <Divider></Divider>
-            { this.state.data.tradeMedicines.length !== 0 ?(
+            {/* { this.state.data.tradeMedicines.length !== 0 ?(
             <div>
                 <MedicineCarousel medicines={this.state.data.tradeMedicines}></MedicineCarousel>
                 <Divider></Divider>
             </div>
             ):''
-            }{this.state.data.relatedArticles.length !== 0?(
+            } */}
+            {this.state.data.relatedArticles.length !== 0?(
                 <RelatedArticlesCollapse relatedWords={this.relatedWords()} data={this.state.data.relatedArticles}/>
 
             ):''

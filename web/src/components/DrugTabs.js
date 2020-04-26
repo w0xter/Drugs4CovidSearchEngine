@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Tabs,Typography, Tag, Row, Col, Space, Divider} from 'antd'
 import AtcInfo from './AtcInfo'
+import MeshInfo from './MeshInfo'
 const { TabPane } = Tabs;
 /*
 
@@ -14,7 +15,7 @@ level: 5
 ​​
 name: "paracetamol"
 */
-export default function DrugTabs({drugs}){
+export default function DrugTabs({type,drugs}){
     return(
         <>
         {drugs.length !== 0 ?(
@@ -22,7 +23,11 @@ export default function DrugTabs({drugs}){
             {drugs.map((drug) => {
                 return(
                     <TabPane tab={drug.id} key={drug.id}>
+                        {type === 'drug' ?(
                         <AtcInfo data={drug}/>
+                        ):(
+                            <MeshInfo data={drug}/>
+                        )}
                     </TabPane>
                 )
             })}

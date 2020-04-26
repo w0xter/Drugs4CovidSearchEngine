@@ -24,10 +24,11 @@ export default function RelatedArticles(props){
         <Collapse defaultActiveKey={['0']}>
             {
                 props.data.map((item, idx) => {
-                    const link = item.article !== null && Object.keys(item.article).includes('url_s') ? item.article.url_s:'#'
-                    const title = item.article !== null && Object.keys(item.article).includes('name_s') ? item.article.name_s:'Read the article' 
+                    const link = item.article !== null && Object.keys(item.article).includes('url') ? item.article.url:'#'
+                    const title = item.article !== null && Object.keys(item.article).includes('title') ? item.article.title:'Read the article' 
                     return(
-                    <Panel header={
+                    <Panel key={idx.toString()}
+                    header={
                         <>
                         <Text strong>{title} </Text>
                         { link !== "#" ?(
@@ -39,13 +40,13 @@ export default function RelatedArticles(props){
                         </>
                         } 
                     key={idx.toString()}>
-                        <Text strong>Section: {item.paragraph.section_s}</Text>
+                        <Text strong>Section: {item.article.section}</Text>
                         <Paragraph className="text-justify">
                         <Highlighter
                             highlightClassName="YourHighlightClass"
                             searchWords={props.relatedWords}
                             autoEscape={true}
-                            textToHighlight={item.paragraph.text_t}
+                            textToHighlight={item.text}
                         />                        
                         
                         </Paragraph>
