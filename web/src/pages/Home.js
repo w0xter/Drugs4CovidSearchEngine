@@ -26,10 +26,10 @@ export default class Home extends React.Component{
                     <Row align="top">
                         <Col xs={24} md={12}>
                             <Title level={2}>
-                            BIO-NLP
+                            D4C Search Engine
                             </Title>
-                            <Paragraph>
-                            An open web service to identify drugs mentioned in a text and classify them according to the Anatomical Therapeutic Chemical (ATC) classification system and the Concept Unique Identifiers (CUI) described in the Unified Medical Language System (UMLS)
+                            <Paragraph style={{textAlign:'justify'}}>
+                            An open web service to exploit the existing scientific literature about coronavirus (more than 60,000 papers) identifying drugs, diseases and articles and displaying their relations inside the corpus. You can search by ATC code, Generic Name, Disease Name or MESH code.
                             </Paragraph>
                         </Col>
                         <Col xs={24} md={12}>

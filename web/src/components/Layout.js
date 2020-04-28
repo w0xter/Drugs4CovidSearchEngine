@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from './Header'
+import Footer from './Footer'
 import {Row, Col} from 'antd'
 export default function Layout(props){
     return(
@@ -12,7 +13,10 @@ export default function Layout(props){
             xl={{ span: 16}}            
             >
                 <Header></Header>
-                {props.children}
+                <div style={{minHeight:'90vh'}}>
+                    {props.children}
+                </div>
+                <Footer></Footer>
             </Col>
         </Row>
     )

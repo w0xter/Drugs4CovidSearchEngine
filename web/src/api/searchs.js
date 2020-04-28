@@ -13,24 +13,24 @@ export function getMeshInfo(mesh){
     return new Promise(async (resolve, reject) => {
         try{
             const id = mesh.toUpperCase()
-            const data = await getDiseaseInfo(id)
+            const data = await getDiseaseInfo(id).catch(err => resolve())
             const options = {keywords:`'${data.name_t.toLowerCase()}'`}
             let result = await {tradeMedicines:[],relatedDrugs:[], relatedArticles:[],relatedDiseases:[], ...data}
-            let relatedArticles = await getRelatedArticles(options)
+            let relatedArticles = await getRelatedArticles(options).catch((err) => [])
             if(relatedArticles.length === 0)
-                relatedArticles = await getRelatedArticles({keywords:id})
+                relatedArticles = await getRelatedArticles({keywords:id}).catch((err) => [])
             result.relatedArticles = relatedArticles
-            let relatedDiseases = await getRelatedDiseases(options)
+            let relatedDiseases = await getRelatedDiseases(options).catch((err) => [])
             if(relatedDiseases.length === 0)
-                relatedDiseases = await getRelatedDiseases({keywords:id})
+                relatedDiseases = await getRelatedDiseases({keywords:id}).catch((err) => [])
             result.relatedDiseases = relatedDiseases
-            let relatedDrugs  = await getRelatedDrugs(options)
+            let relatedDrugs  = await getRelatedDrugs(options).catch((err) => [])
             if(relatedDrugs.length === 0)
-                relatedDrugs = await getRelatedDrugs({keywords:id})
+                relatedDrugs = await getRelatedDrugs({keywords:id}).catch((err) => [])
             result.relatedDrugs = relatedDrugs
             resolve(result)
         }catch(err){
-            reject(err)
+            console.log(err)
         }
     })
 }
@@ -38,29 +38,28 @@ export function getAtcInfo(atc){
     return new Promise(async (resolve, reject) => {
         try{
         const id  = atc.toUpperCase()
-        const data = await getInfoByAtc(id)
+        const data = await getInfoByAtc(id).catch(err => resolve())
         const options = {keywords:`'${data.label_t.toLowerCase()}'`}
         let result = await {tradeMedicines:[],relatedDrugs:[], relatedArticles:[],relatedDiseases:[],replacementDrugs:[], ...data}
-        result.tradeMedicines = await  getMedicinesInfo(result.id)
-        let replacementDrugs = await getDrugsReplacements(options)
+        result.tradeMedicines = await  getMedicinesInfo(result.id).catch((err) => [])
+        let replacementDrugs = await getDrugsReplacements(options).catch((err) => [])
         if(replacementDrugs.length === 0)
-            replacementDrugs = await getDrugsReplacements({keywords:id})
+            replacementDrugs = await getDrugsReplacements({keywords:id}).catch((err) => [])
         result.replacementDrugs = replacementDrugs
-        let relatedArticles = await getRelatedArticles(options)
+        let relatedArticles = await getRelatedArticles(options).catch((err) => [])
         if(relatedArticles.length === 0)
-            relatedArticles = await getRelatedArticles({keywords:id})
+            relatedArticles = await getRelatedArticles({keywords:id}).catch((err) => [])
         result.relatedArticles = relatedArticles
-        let relatedDiseases = await getRelatedDiseases(options)
+        let relatedDiseases = await getRelatedDiseases(options).catch((err) => [])
         if(relatedDiseases.length === 0)
-            relatedDiseases = await getRelatedDiseases({keywords:id})
+            relatedDiseases = await getRelatedDiseases({keywords:id}).catch((err) => [])
         result.relatedDiseases = relatedDiseases
-        let relatedDrugs  = await getRelatedDrugs(options)
+        let relatedDrugs  = await getRelatedDrugs(options).catch((err) => [])
         if(relatedDrugs.length === 0)
-            relatedDrugs = await getRelatedDrugs({keywords:id})
+            relatedDrugs = await getRelatedDrugs({keywords:id}).catch((err) => [])
         result.relatedDrugs = relatedDrugs
         resolve(result)
     }catch(err){
-        reject(err)
         console.error(err)
     }
     })    

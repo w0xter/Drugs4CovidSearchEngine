@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {List,Table, Typography, Tag, Row, Col, Space, Divider, Button, Tooltip, Collapse} from 'antd'
+import {List,Table, Typography, Tag, Row, Col, Space, Divider, Button, Tooltip, Result,Collapse} from 'antd'
 import {InfoCircleOutlined} from '@ant-design/icons'
 import MedicineCarousel from './MedicineCarousel'
 import RelatedArticlesCollapse from './RelatedArticlesCollapse'
@@ -21,7 +21,13 @@ export default class AtcInfo extends React.Component{
         super(props);
         this.state={
             data:this.props.data,
-            articles:this.props.data.relatedArticles
+            articles:this.props.data.relatedArticles,
+            empty:(
+                this.props.data.relatedArticles.length === 0 &&
+                this.props.data.relatedDrugs.length === 0 &&
+                this.props.data.relatedDiseases.length === 0 &&
+                this.props.data.replacementDrugs.length === 0
+            )
         }
     }
     relatedWords = () => {
@@ -66,6 +72,19 @@ export default class AtcInfo extends React.Component{
                 </Col>
             </Row>                        
             <Divider></Divider>
+            {
+                this.state.empty ? (
+                    <>
+                <Result
+                    status="404"
+                    title="404"
+                    subTitle={"Sorry, we didn't found anything about " + this.state.data.label_t}
+                    extra={<Button href={"/customsearch/" + this.state.data.label_t} type="primary">Try to use the Custom Search</Button>}
+                  />
+                    <Divider></Divider>
+                  </>
+                ):''
+            }            
             { this.state.data.tradeMedicines.length !== 0 ?(
             <div>
                 <MedicineCarousel medicines={this.state.data.tradeMedicines}></MedicineCarousel>

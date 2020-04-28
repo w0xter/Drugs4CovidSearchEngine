@@ -200,6 +200,7 @@ export function fieldAutoComplete(field,type, value, search, title){
 }
 export function autocomplete(value){
     let result = []
+    //{search:'disease',title:'Mapping',type:'mappings', value:value}
     //{search:'disease',title:'Disease Synonym',type:'synonyms', value:value}
     const fields = [
         {
@@ -208,7 +209,7 @@ export function autocomplete(value){
         },
         {
             field:solr_diseases,
-            types:[{search:'disease',title:'MESH',type:'id', value:value.toUpperCase()}, {search:'disease',title:'Mapping',type:'mappings', value:value},{search:'disease',title:'Disease',type:'name_t', value:value} ]
+            types:[{search:'disease',title:'MESH',type:'id', value:value.toUpperCase()},{search:'disease',title:'Disease',type:'name_t', value:value} ]
         }
     ]
     fields.map((field) => {

@@ -15,7 +15,7 @@ function App() {
         </Route>
         <Route path="/search/:searchType/:drugsNames" component={SearchPage}/>
         <Route exact path="/KG" component={Kg}/>
-        <Route exact path="/customsearch/" component={CustomSearchPage}/>
+        <Route path="/customsearch/:keywords?" component={CustomSearchPage}/>
       </Switch>
     </Router>
   );
