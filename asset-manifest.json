@@ -1,28 +1,36 @@
 {
   "files": {
-    "main.css": "/static/css/main.d4220677.chunk.css",
-    "main.js": "/static/js/main.983a783d.chunk.js",
-    "main.js.map": "/static/js/main.983a783d.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.3ce8a40d.js",
-    "runtime-main.js.map": "/static/js/runtime-main.3ce8a40d.js.map",
+    "main.css": "/static/css/main.5928bccb.chunk.css",
+    "main.js": "/static/js/main.26e3188c.chunk.js",
+    "main.js.map": "/static/js/main.26e3188c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d86a9d92.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d86a9d92.js.map",
     "static/css/2.a43b59a1.chunk.css": "/static/css/2.a43b59a1.chunk.css",
-    "static/js/2.b59af5bc.chunk.js": "/static/js/2.b59af5bc.chunk.js",
-    "static/js/2.b59af5bc.chunk.js.map": "/static/js/2.b59af5bc.chunk.js.map",
+    "static/js/2.57adccae.chunk.js": "/static/js/2.57adccae.chunk.js",
+    "static/js/2.57adccae.chunk.js.map": "/static/js/2.57adccae.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.77f7aaf86a8d859fb8cc83a2dee36574.js": "/precache-manifest.77f7aaf86a8d859fb8cc83a2dee36574.js",
+    "precache-manifest.90d9c98c8002ef732ba5757c2b821fa1.js": "/precache-manifest.90d9c98c8002ef732ba5757c2b821fa1.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.a43b59a1.chunk.css.map": "/static/css/2.a43b59a1.chunk.css.map",
-    "static/css/main.d4220677.chunk.css.map": "/static/css/main.d4220677.chunk.css.map",
-    "static/js/2.b59af5bc.chunk.js.LICENSE.txt": "/static/js/2.b59af5bc.chunk.js.LICENSE.txt",
+    "static/css/main.5928bccb.chunk.css.map": "/static/css/main.5928bccb.chunk.css.map",
+    "static/js/2.57adccae.chunk.js.LICENSE.txt": "/static/js/2.57adccae.chunk.js.LICENSE.txt",
+    "static/media/FacInformatica.jpg": "/static/media/FacInformatica.c48fb5ab.jpg",
+    "static/media/Logo_OEG.jpg": "/static/media/Logo_OEG.bc48c89c.jpg",
     "static/media/abduction.svg": "/static/media/abduction.403de342.svg",
+    "static/media/bbva.svg": "/static/media/bbva.fe09b448.svg",
+    "static/media/image.png": "/static/media/image.5799dfff.png",
     "static/media/logo.svg": "/static/media/logo.aa6b7ebb.svg",
-    "static/media/medical_research.svg": "/static/media/medical_research.c8aab4c4.svg"
+    "static/media/logo.min.svg": "/static/media/logo.min.c1d79895.svg",
+    "static/media/logo.white.svg": "/static/media/logo.white.94d3e461.svg",
+    "static/media/medical_research.svg": "/static/media/medical_research.c8aab4c4.svg",
+    "static/media/oeg.jpg": "/static/media/oeg.33852d44.jpg",
+    "static/media/upm.png": "/static/media/upm.4d109cc0.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.3ce8a40d.js",
+    "static/js/runtime-main.d86a9d92.js",
     "static/css/2.a43b59a1.chunk.css",
-    "static/js/2.b59af5bc.chunk.js",
-    "static/css/main.d4220677.chunk.css",
-    "static/js/main.983a783d.chunk.js"
+    "static/js/2.57adccae.chunk.js",
+    "static/css/main.5928bccb.chunk.css",
+    "static/js/main.26e3188c.chunk.js"
   ]
 }
